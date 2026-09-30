@@ -11,15 +11,14 @@ RESULTS.mkdir(exist_ok=True)
 # separated duration pairs.  They run against the raw module (no timing
 # assumption), so TLC must exhibit the two-owner execution rather than reject
 # the configuration.
-UNSAFE_CONFIGS = [
-    "PaxosLeaseUnsafeQuarantine.cfg",     # (Dp, Da, Q) = (2, 3, 1)
-    "PaxosLeaseUnsafeQuarantine12.cfg",   # (Dp, Da, Q) = (1, 2, 0)
-]
+UNSAFE_CONFIGS = {
+    "PaxosLeaseUnsafeQuarantine.cfg": "unsafe-config.txt",      # (Dp, Da, Q) = (2, 3, 1)
+    "PaxosLeaseUnsafeQuarantine12.cfg": "unsafe-config12.txt",  # (Dp, Da, Q) = (1, 2, 0)
+}
 
 
 def main() -> None:
-    sections = []
-    for cfg in UNSAFE_CONFIGS:
+    for cfg, record in UNSAFE_CONFIGS.items():
         proc = subprocess.run(
             [
                 "tlc",
@@ -38,7 +37,7 @@ def main() -> None:
             check=False,
         )
         out = proc.stdout
-        sections.append(f"===== {cfg} =====\n{out}")
+        (RESULTS / record).write_text(out, encoding="utf-8")
         if proc.returncode == 0:
             raise SystemExit(f"{cfg}: unsafe quarantine config unexpectedly passed")
         if "Invariant LeaseExclusivity is violated" not in out:
@@ -50,7 +49,6 @@ def main() -> None:
             f"{cfg}: TLC exhibits a lease-exclusivity violation "
             f"({trace_states}-state trace)"
         )
-    (RESULTS / "unsafe-config.txt").write_text("\n".join(sections), encoding="utf-8")
 
 
 if __name__ == "__main__":

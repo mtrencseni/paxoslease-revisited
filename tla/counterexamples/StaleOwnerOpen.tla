@@ -54,8 +54,22 @@ Ballots0 == Ballots \cup {0}
 Owners == Proposers \cup {NoOwner}
 MaxDeadline == MaxTime + AcceptorDuration + Quarantine + 1
 
-LeaseRec == [owner : Owners, ballot : Ballots0, deadline : 0..MaxDeadline]
-NoLease == [owner |-> NoOwner, ballot |-> 0, deadline |-> 0]
+(***************************************************************************)
+(* A lease's owner is a proposer INCARNATION, the pair of the proposer and  *)
+(* its durable restart counter, which every ballot already carries (P1).    *)
+(* A restarted proposer starts its attempt counter again, so its new        *)
+(* ballots may be LOWER than those of its previous incarnation; the model   *)
+(* lets it use any unused ballot after a restart.  A2 compares owners as    *)
+(* incarnations: a delayed accept request of a previous incarnation is a    *)
+(* different owner and cannot replace the current incarnation's live lease. *)
+(* Proposers restart at most once when crashes are enabled.                 *)
+(***************************************************************************)
+MaxIncarnation == IF AllowCrash THEN 1 ELSE 0
+Incarnations == 0..MaxIncarnation
+
+LeaseRec == [owner : Owners, inc : Incarnations, ballot : Ballots0,
+             deadline : 0..MaxDeadline]
+NoLease == [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0]
 
 Msg ==
     [kind : {"Prepare"}, from : Proposers, to : Acceptors, ballot : Ballots]
@@ -63,7 +77,7 @@ Msg ==
         ballot : Ballots, owner : Owners, acceptedBallot : Ballots0,
         acceptedDeadline : 0..MaxDeadline]
   \cup [kind : {"AcceptReq"}, from : Proposers, to : Acceptors,
-        ballot : Ballots, owner : Proposers]
+        ballot : Ballots, owner : Proposers, inc : Incarnations]
   \cup [kind : {"Accepted"}, from : Acceptors, to : Proposers,
         ballot : Ballots, deadline : 0..MaxDeadline]
   \cup [kind : {"Release"}, from : Proposers, to : Acceptors,
@@ -87,11 +101,12 @@ VARIABLES
     certDeadline,
     crashedP,
     crashedA,
-    quarantineUntil
+    quarantineUntil,
+    pInc
 
 vars == << now, network, promised, accepted, phase, pBallot, usedBallots, pDeadline,
            pendingDeadline, okResp, acceptResp, active, activeBallot,
-           cert, certDeadline, crashedP, crashedA, quarantineUntil >>
+           cert, certDeadline, crashedP, crashedA, quarantineUntil, pInc >>
 
 IsQuorum(S) ==
     S \subseteq Acceptors /\ Cardinality(S) * 2 > Cardinality(Acceptors)
@@ -152,6 +167,7 @@ Init ==
     /\ crashedP = {}
     /\ crashedA = {}
     /\ quarantineUntil = [a \in Acceptors |-> 0]
+    /\ pInc = [p \in Proposers |-> 0]
 
 StartAcquire ==
     \E p \in Proposers, b \in Ballots :
@@ -171,7 +187,7 @@ StartAcquire ==
                 a \in Acceptors }
         /\ UNCHANGED << now, promised, accepted, pDeadline,
                         active, activeBallot, cert, certDeadline, crashedP,
-                        crashedA, quarantineUntil >>
+                        crashedA, quarantineUntil, pInc >>
 
 DeliverPrepare ==
     \E m \in network, keep \in RedeliverChoice :
@@ -193,7 +209,7 @@ DeliverPrepare ==
         /\ UNCHANGED << now, accepted, phase, pBallot, usedBallots, pDeadline,
                         pendingDeadline, okResp, acceptResp,
                         active, activeBallot, cert, certDeadline, crashedP,
-                        crashedA, quarantineUntil >>
+                        crashedA, quarantineUntil, pInc >>
 
 (***************************************************************************)
 (* P2: a promise counts as open if it reports no live lease, or, FOR A       *)
@@ -205,10 +221,10 @@ DeliverPrepare ==
 (* attempt's accept request landed late, possibly overwriting a competitor's *)
 (* live lease without revoking the competitor's authority; counting it as    *)
 (* open licenses a fresh acquisition while the competitor is still active.   *)
-(* TLC exhibits the two-owner execution in 36 states under                   *)
-(* PaxosLeaseRetry.cfg when the qualifier is dropped                         *)
-(* (counterexamples/StaleOwnerOpen.tla), and no quarantine length prevents   *)
-(* it, since the stale accept request can be delayed arbitrarily.            *)
+(* With overwriting acceptors (RefuseLiveOverwrite = FALSE), TLC exhibits   *)
+(* the two-owner execution in 36 states when the qualifier is dropped        *)
+(* (counterexamples/StaleOwnerOpen.tla/.cfg), and no quarantine length       *)
+(* prevents it.  With A2's refusal the qualifier is not needed for safety.   *)
 (***************************************************************************)
 DeliverPromise ==
     \E m \in network, keep \in RedeliverChoice :
@@ -224,7 +240,7 @@ DeliverPromise ==
         /\ UNCHANGED << now, promised, accepted, phase, pBallot, usedBallots, pDeadline,
                         pendingDeadline, acceptResp, active, activeBallot,
                         cert, certDeadline, crashedP, crashedA,
-                        quarantineUntil >>
+                        quarantineUntil, pInc >>
 
 SendAccept ==
     \E p \in Proposers :
@@ -236,21 +252,31 @@ SendAccept ==
         /\ acceptResp' = [acceptResp EXCEPT ![p] = {}]
         /\ network' = network \cup
             { [kind |-> "AcceptReq", from |-> p, to |-> a,
-                ballot |-> pBallot[p], owner |-> p] : a \in Acceptors }
+                ballot |-> pBallot[p], owner |-> p, inc |-> pInc[p]] :
+                    a \in Acceptors }
         /\ UNCHANGED << now, promised, accepted, pBallot, usedBallots, pDeadline,
                         pendingDeadline, okResp, active, activeBallot, cert,
-                        certDeadline, crashedP, crashedA, quarantineUntil >>
+                        certDeadline, crashedP, crashedA, quarantineUntil, pInc >>
 
 (***************************************************************************)
 (* A2.  With RefuseLiveOverwrite, the acceptor additionally refuses to     *)
 (* replace a live accepted lease of a DIFFERENT owner, even under a higher *)
-(* ballot; the refusal is treated exactly like a ballot rejection (no      *)
+(* ballot, where owners are proposer incarnations (SameOwner); the refusal is treated exactly like a ballot rejection (no      *)
 (* response, promised unchanged).  This is the acceptor-side repair of the *)
 (* stale-owner trap: the record a delayed accept request would overwrite   *)
 (* stays in place, so a later prepare still reports the live owner.  The   *)
 (* cost is availability, bounded by one exclusion interval.  FALSE is the  *)
 (* rule of [1] and of both audited implementations.                        *)
+(*                                                                          *)
+(* The rule is REQUIRED, not an alternative to P2's renewal qualifier.     *)
+(* With FALSE, a renewal across a single acceptor restart gives two owners *)
+(* with the qualifier in force (PaxosLeaseRenewCrashSearch.cfg, 39 states, *)
+(* three acceptors), and so does early release across a restart            *)
+(* (PaxosLeaseReleaseCrashSearch.cfg, 40 states).  Configurations that     *)
+(* were checked with FALSE remain evidence for the rules they target.      *)
 (***************************************************************************)
+SameOwner(r, m) == r.owner = m.owner /\ r.inc = m.inc
+
 DeliverAcceptReq ==
     \E m \in network, keep \in RedeliverChoice :
         /\ m.kind = "AcceptReq"
@@ -259,7 +285,7 @@ DeliverAcceptReq ==
                 /\ m.ballot >= promised[m.to]
                 /\ \/ ~RefuseLiveOverwrite
                    \/ ~ValidLease(accepted[m.to])
-                   \/ accepted[m.to].owner = m.owner
+                   \/ SameOwner(accepted[m.to], m)
            IN
             /\ network' =
                 (IF keep THEN network ELSE network \ {m}) \cup
@@ -275,13 +301,13 @@ DeliverAcceptReq ==
             /\ accepted' =
                 IF granted
                 THEN [accepted EXCEPT ![m.to] =
-                        [owner |-> m.owner, ballot |-> m.ballot,
+                        [owner |-> m.owner, inc |-> m.inc, ballot |-> m.ballot,
                          deadline |-> Cap(now + AcceptorDuration)]]
                 ELSE accepted
         /\ UNCHANGED << now, phase, pBallot, usedBallots, pDeadline, pendingDeadline,
                         okResp, acceptResp, active, activeBallot,
                         cert, certDeadline, crashedP, crashedA,
-                        quarantineUntil >>
+                        quarantineUntil, pInc >>
 
 DeliverAccepted ==
     \E m \in network, keep \in RedeliverChoice :
@@ -314,7 +340,7 @@ DeliverAccepted ==
                         ELSE phase
         /\ UNCHANGED << now, promised, accepted, pBallot, usedBallots, pendingDeadline,
                         okResp, crashedP, crashedA,
-                        quarantineUntil >>
+                        quarantineUntil, pInc >>
 
 (***************************************************************************)
 (* P5: an attempt that cannot proceed is abandoned.  The proposer returns   *)
@@ -337,7 +363,7 @@ AbandonAttempt ==
         /\ UNCHANGED << now, network, promised, accepted, pBallot, usedBallots,
                         pDeadline, pendingDeadline, okResp, acceptResp, active,
                         activeBallot, cert, certDeadline, crashedP, crashedA,
-                        quarantineUntil >>
+                        quarantineUntil, pInc >>
 
 Release ==
     \E p \in active :
@@ -350,7 +376,7 @@ Release ==
         /\ UNCHANGED << now, promised, accepted, phase, pBallot, usedBallots, pDeadline,
                         pendingDeadline, okResp, acceptResp,
                         activeBallot, cert, certDeadline, crashedP, crashedA,
-                        quarantineUntil >>
+                        quarantineUntil, pInc >>
 
 DeliverRelease ==
     \E m \in network, keep \in RedeliverChoice :
@@ -364,7 +390,7 @@ DeliverRelease ==
         /\ UNCHANGED << now, promised, phase, pBallot, usedBallots, pDeadline,
                         pendingDeadline, okResp, acceptResp,
                         active, activeBallot, cert, certDeadline, crashedP,
-                        crashedA, quarantineUntil >>
+                        crashedA, quarantineUntil, pInc >>
 
 DropMessage ==
     \E m \in network :
@@ -373,7 +399,7 @@ DropMessage ==
         /\ UNCHANGED << now, promised, accepted, phase, pBallot, usedBallots, pDeadline,
                         pendingDeadline, okResp, acceptResp,
                         active, activeBallot, cert, certDeadline, crashedP,
-                        crashedA, quarantineUntil >>
+                        crashedA, quarantineUntil, pInc >>
 
 Tick ==
     /\ now < MaxTime
@@ -382,7 +408,7 @@ Tick ==
         /\ active' = {p \in active : nn < pDeadline[p] /\ p \notin crashedP}
     /\ UNCHANGED << network, promised, accepted, phase, pBallot, usedBallots, pDeadline,
                     pendingDeadline, okResp, acceptResp, activeBallot,
-                    cert, certDeadline, crashedP, crashedA, quarantineUntil >>
+                    cert, certDeadline, crashedP, crashedA, quarantineUntil, pInc >>
 
 CrashProposer ==
     \E p \in Proposers :
@@ -395,14 +421,23 @@ CrashProposer ==
         /\ UNCHANGED << now, promised, accepted, pBallot, usedBallots, pDeadline,
                         pendingDeadline, okResp, acceptResp,
                         activeBallot, cert, certDeadline, crashedA,
-                        quarantineUntil >>
+                        quarantineUntil, pInc >>
 
+(***************************************************************************)
+(* A restart increments the durable restart counter, so the proposer comes *)
+(* back as a new incarnation, and resets the attempt counter, so the new   *)
+(* incarnation may choose any ballot no proposer has used, lower ones      *)
+(* included.                                                                *)
+(***************************************************************************)
 RestartProposer ==
     \E p \in crashedP :
         /\ AllowCrash
+        /\ pInc[p] < MaxIncarnation
         /\ crashedP' = crashedP \ {p}
+        /\ pInc' = [pInc EXCEPT ![p] = @ + 1]
+        /\ pBallot' = [pBallot EXCEPT ![p] = 0]
         /\ network' = PurgeInbox(network, p)
-        /\ UNCHANGED << now, promised, accepted, phase, pBallot,
+        /\ UNCHANGED << now, promised, accepted, phase,
                         usedBallots, pDeadline, pendingDeadline, okResp,
                         acceptResp, active, activeBallot, cert, certDeadline,
                         crashedA, quarantineUntil >>
@@ -418,7 +453,7 @@ CrashAcceptor ==
         /\ UNCHANGED << now, phase, pBallot, usedBallots, pDeadline,
                         pendingDeadline, okResp, acceptResp, active,
                         activeBallot, cert, certDeadline, crashedP,
-                        quarantineUntil >>
+                        quarantineUntil, pInc >>
 
 RestartAcceptor ==
     \E a \in crashedA :
@@ -429,7 +464,7 @@ RestartAcceptor ==
         /\ UNCHANGED << now, promised, accepted, phase, pBallot,
                         usedBallots, pDeadline, pendingDeadline, okResp,
                         acceptResp, active, activeBallot, cert, certDeadline,
-                        crashedP >>
+                        crashedP, pInc >>
 
 StutterAtEnd ==
     /\ now = MaxTime
@@ -462,11 +497,13 @@ TypeOK ==
     /\ crashedP \subseteq Proposers
     /\ crashedA \subseteq Acceptors
     /\ quarantineUntil \in [Acceptors -> 0..MaxDeadline]
+    /\ pInc \in [Proposers -> Incarnations]
 
 AcceptedCoherence ==
     \A a \in Acceptors :
         \/ accepted[a] = NoLease
         \/ /\ accepted[a].owner \in Proposers
+           /\ accepted[a].inc \in Incarnations
            /\ accepted[a].ballot \in Ballots
            /\ accepted[a].deadline \in 1..MaxDeadline
 

@@ -6,7 +6,7 @@ algorithm of Section 4, written to be read in one sitting and run in a few
 seconds.  Three nodes live in one asyncio event loop, each hosting the
 three roles (proposer, acceptor, learner), and every method names the
 paper step it implements: P1..P5 on the proposer, A1/A2/A4 on the
-acceptor, L1 on the learner, T1/T2/T3/T4 as the timing rules.
+acceptor, L1 on the learner, T1/T2/T3 as the timing rules.
 
 This is correct PaxosLease and nothing else.  Where the paper shows that a
 plausible alternative to a rule is unsafe, the comment at that rule says
@@ -57,7 +57,7 @@ def now() -> float:
 
 # A ballot is (counter, restart, node): counter-major, so ballots grow with
 # every attempt; the restart component is a durably stored counter bumped at
-# every process start, so no ballot is ever reused across a crash (P1, T4).
+# every process start, so no ballot is ever reused across a crash (P1).
 Ballot = tuple[int, int, int]
 
 NO_BALLOT: Ballot = (0, 0, 0)
@@ -98,7 +98,7 @@ class Promise:
 class Rejected:
     ballot: Ballot                      # the ballot being refused
     src: int
-    promised: Ballot                    # what to exceed (T4's catch-up aid)
+    promised: Ballot                    # what to exceed (P1's catch-up aid)
 
 
 @dataclass(frozen=True)
@@ -198,7 +198,7 @@ class AcceptorRole:
     def on_prepare(self, msg: Prepare) -> None:
         """A1: promise the ballot and report the live accepted lease.
         An expired lease is reported as no lease.  A rejection carries the
-        promised ballot: that is T4's liveness half, and this demo needs
+        promised ballot: that is P1's liveness half, and this demo needs
         it, because after an owner dies its final ballot is still promised
         everywhere and a survivor climbing one counter per attempt would
         stall for many attempt durations."""
@@ -217,9 +217,23 @@ class AcceptorRole:
 
     def on_accept(self, msg: Accept) -> None:
         """A2: record the lease instance (owner, ballot) and start the
-        exclusion interval of D_A on this acceptor's own clock."""
+        exclusion interval of D_A on this acceptor's own clock.  Never
+        replace a live lease of a different owner, even under a higher
+        ballot: overwriting it lets a renewal and a single acceptor restart
+        produce two owners (see "Overwriting Acceptors" in the paper).
+        The owner is an incarnation, the node together with the restart
+        component of its ballot: a restarted proposer's ballots may be lower
+        than its previous incarnation's, and a delayed Accept of that
+        previous incarnation must not replace the new one's lease."""
         if not self.participating() or msg.ballot < self.promised:
             return
+        if (
+            self.lease_owner is not None
+            and (self.lease_owner, self.lease_ballot[1])
+            != (msg.owner, msg.ballot[1])
+            and now() < self.lease_deadline
+        ):
+            return                       # refused, like a ballot rejection
         self.promised = msg.ballot
         self.lease_owner = msg.owner
         self.lease_ballot = msg.ballot
@@ -238,7 +252,8 @@ class AcceptorRole:
     def restart(self) -> None:
         """A4: refuse every lease-layer message for Q after a restart, so
         that everything this acceptor forgot has expired before it speaks
-        again (T3, and Section 7 of the paper for why Q = D_P suffices)."""
+        again (T3, and "Restart Quarantine Bound" in the paper for why
+        Q = D_P suffices)."""
         self.crashed = False
         self.quarantine_until = now() + self.timing.quarantine
         log(f"a{self.node_id}", f"restarted, quarantined for {self.timing.quarantine}s")
@@ -290,8 +305,8 @@ class ProposerRole:
         # Moving this assignment below the wait for a prepare quorum, so
         # that the deadline starts when the evidence is about to be used,
         # would be UNSAFE: the prepare quorum then never expires and no
-        # finite quarantine covers it.  See "Timer Placement and the
-        # Renewal Qualifier" in the paper, which gives the 27-state
+        # finite quarantine covers it, with acceptors that overwrite.  See
+        # "Overwriting Acceptors" in the paper, which gives the 27-state
         # two-owner execution, and tla/counterexamples/LateTimer.tla.
         self.counter += 1
         self.ballot = (self.counter, self.restart_count, self.node_id)
@@ -354,8 +369,9 @@ class ProposerRole:
     def on_promise(self, msg: Promise) -> None:
         """P2: count a promise by acceptor IDENTITY, and count it as open
         only if it reports no live lease or, for a renewal attempt, the
-        exact lease captured as this attempt's renewal base at P1.  The
-        provenance is stored state, not inferred at delivery.
+        exact lease captured as this attempt's renewal base at P1, and
+        only while that lease is still held.  The provenance is stored
+        state, not inferred at delivery.
 
         Both qualifications are safety-critical.  Counting responses
         rather than distinct identities lets one acceptor's doubled reply
@@ -365,12 +381,15 @@ class ProposerRole:
         self-owned lease as open, instead of only the one being renewed,
         lets a record installed by this proposer's own abandoned attempt
         license a fresh acquisition while a competitor still owns the
-        lease; see "Timer Placement and the Renewal Qualifier" in the
-        paper and tla/counterexamples/StaleOwnerOpen.tla."""
+        lease, with acceptors that overwrite; see "Overwriting Acceptors"
+        in the paper and tla/counterexamples/StaleOwnerOpen.tla."""
         if self.phase != "preparing" or msg.ballot != self.ballot:
             return                       # stale response of an abandoned attempt
         renewing_this = (
-            self.renewal_base is not None and msg.lease_ballot == self.renewal_base
+            self.renewal_base is not None
+            and msg.lease_ballot == self.renewal_base
+            and self.is_active()
+            and self.active_ballot == self.renewal_base
         )
         if msg.lease_owner is None or (msg.lease_owner == self.node_id and renewing_this):
             self.promises_ok.add(msg.src)
@@ -380,7 +399,7 @@ class ProposerRole:
             self.quorum_event.set()
 
     def on_rejected(self, msg: Rejected) -> None:
-        """T4, the liveness half: raise the counter above any ballot this
+        """P1, the liveness half: raise the counter above any ballot this
         proposer observes, so the next attempt is not doomed to lose the
         same comparison.  Safety never depends on this."""
         if msg.ballot != self.ballot:

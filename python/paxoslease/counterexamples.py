@@ -43,6 +43,9 @@ CATEGORIES = {
     "stale-accept-overwrites-newer": "unit-rule",
     "late-promise-reuse": "simulator-execution",
     "stale-owner-open": "simulator-execution",
+    "release-after-stale-accept": "simulator-execution",
+    "renewal-over-overwritten-grant": "simulator-execution",
+    "release-across-proposer-restart": "simulator-execution",
     "split-brain-read-without-fence": "unit-rule",
     "suspended-event-loop": "simulator-execution",
     "unsigned-expiry-underflow": "unit-rule",
@@ -63,6 +66,9 @@ EXPECTED_VIOLATION = {
     "stale-accept-overwrites-newer": "stale lower-ballot accept overwrote newer promise",
     "late-promise-reuse": "lease exclusivity violated",
     "stale-owner-open": "lease exclusivity violated",
+    "release-after-stale-accept": "lease exclusivity violated",
+    "renewal-over-overwritten-grant": "lease exclusivity violated",
+    "release-across-proposer-restart": "lease exclusivity violated",
     "split-brain-read-without-fence": "unfenced read was concurrent",
     "suspended-event-loop": "lease exclusivity violated during event-loop suspension",
     "unsigned-expiry-underflow": "unsigned expiry subtraction underflowed",
@@ -100,8 +106,11 @@ FIXES = {
     "unsafe-clock-source": "lease timers must be monotonic elapsed-time measurements with bounded rate error",
     "renewal-without-quorum": "renewal may extend authority only after a fresh accept quorum",
     "stale-accept-overwrites-newer": "acceptors must reject lower ballots after promising a higher ballot",
-    "late-promise-reuse": "start the attempt deadline when Prepare is sent, so prepare responses expire with the attempt that collected them",
-    "stale-owner-open": "count a reported own lease as open only while renewing (currently active); a stale own record must block like a foreign lease",
+    "late-promise-reuse": "with acceptors that overwrite, start the attempt deadline when Prepare is sent, so prepare responses expire with the attempt that collected them; A2's acceptor-side rule also prevents this",
+    "stale-owner-open": "with acceptors that overwrite, count a reported own lease as open only while renewing (currently active); a stale own record must block like a foreign lease; A2's acceptor-side rule also prevents this",
+    "release-after-stale-accept": "with early release enabled, an acceptor must never replace a live lease of a different owner (A2's acceptor-side rule); exact-instance matching in A3 is not enough",
+    "renewal-over-overwritten-grant": "an acceptor must never replace a live lease of a different owner (A2's acceptor-side rule); the renewal qualifier alone does not prevent this",
+    "release-across-proposer-restart": "A2 must compare owners as proposer incarnations (node and restart counter), since a restarted proposer's ballots may be lower than its previous incarnation's",
     "split-brain-read-without-fence": "external reads and writes require either log ordering or fencing",
     "suspended-event-loop": "store the attempt deadline as protocol state and check it in the Phase 2 response handler, instead of relying on timer dispatch order",
     "unsigned-expiry-underflow": "read the clock once per handler, compare before subtracting, and keep deadline arithmetic away from unsigned wraparound",
@@ -273,8 +282,14 @@ def late_promise_reuse() -> CounterexampleResult:
     """
 
     def run() -> tuple[str, ...]:
+        # Under the overwriting A2 of the 2012 paper and both audited
+        # implementations, the rule this witness was found against.
         sim = Simulator(
-            proposer_duration=4, acceptor_duration=4, quarantine=4, timer_at_quorum=True
+            proposer_duration=4,
+            acceptor_duration=4,
+            quarantine=4,
+            timer_at_quorum=True,
+            refuse_live_overwrite=False,
         )
         sim.start_acquire("p1")
         sim.start_acquire("p2")
@@ -360,6 +375,7 @@ def stale_owner_open() -> CounterexampleResult:
             acceptor_duration=2,
             quarantine=2,
             self_open_when_inactive=True,
+            refuse_live_overwrite=False,  # the overwriting A2 it was found against
         )
         _stale_owner_open_schedule(sim)
         # The unqualified rule counted the stale own lease as open, so the
@@ -372,6 +388,177 @@ def stale_owner_open() -> CounterexampleResult:
         return ()
 
     return _expect_violation("stale-owner-open", run)
+
+
+def _deliver_exact(sim: Simulator, kind: str, dst: str, src: str, ballot: object) -> None:
+    """Deliver the queued message matching kind, endpoints AND ballot, so a
+    stale message of an earlier attempt cannot be picked by mistake."""
+    for msg in sim.queue:
+        if str(msg.kind) == kind and msg.dst == dst and msg.src == src and msg.ballot == ballot:
+            sim.deliver_by_id(msg.id)
+            return
+    raise AssertionError(f"no queued {kind} {src}->{dst} under ballot {ballot}")
+
+
+def _release_after_stale_accept_schedule(sim: Simulator) -> object:
+    """The shared schedule, on the UNMODIFIED rules: p2 acquires and
+    releases early with its accept and release to a3 still in flight; one
+    acceptor restarts and serves the FULL quarantine; p1 acquires under a
+    lower ballot through a2 and a3; the stale accept then reinstalls p2's
+    released instance over p1's live record at a3 (ballot order permits it),
+    and the stale release, matching that instance exactly, clears it.  p2
+    finally prepares a fresh ballot on a1 and a3.  Returns that ballot."""
+    # p2's first ballot (1, 1, "p2") beats p1's (1, 1, "p1") on the node
+    # tiebreak.  a3 never sees p2's prepare, so it never promises that ballot.
+    sim.start_acquire("p2")
+    first = sim.proposers["p2"].ballot
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "prepare", aid, "p2", first)
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "promise", "p2", aid, first)
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "accept", aid, "p2", first)
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "accepted", "p2", aid, first)
+    assert sim.active_owners() == {"p2"}
+    # P6: p2 stops owning and releases; the release to a3 stays in flight.
+    sim.release("p2")
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "release", aid, "p2", first)
+    # a2 forgets its promise of p2's ballot and serves the FULL quarantine.
+    sim.crash_acceptor("a2")
+    sim.restart_acceptor("a2")
+    sim.tick(sim.quarantine)
+    # p1 acquires cleanly under its lower first ballot through a2 and a3.
+    sim.start_acquire("p1")
+    lower = sim.proposers["p1"].ballot
+    for aid in ("a2", "a3"):
+        _deliver_exact(sim, "prepare", aid, "p1", lower)
+    for aid in ("a2", "a3"):
+        _deliver_exact(sim, "promise", "p1", aid, lower)
+    for aid in ("a2", "a3"):
+        _deliver_exact(sim, "accept", aid, "p1", lower)
+    for aid in ("a2", "a3"):
+        _deliver_exact(sim, "accepted", "p1", aid, lower)
+    assert sim.active_owners() == {"p1"}
+    # The stale accept reinstalls p2's released instance over p1's live
+    # record at a3, and the stale release then matches it exactly (A3).
+    _deliver_exact(sim, "accept", "a3", "p2", first)
+    _deliver_exact(sim, "release", "a3", "p2", first)
+    # p2 prepares afresh; a1's record was released and a3's just cleared.
+    sim.start_acquire("p2")
+    fresh = sim.proposers["p2"].ballot
+    for aid in ("a1", "a3"):
+        _deliver_exact(sim, "prepare", aid, "p2", fresh)
+    for aid in ("a1", "a3"):
+        _deliver_exact(sim, "promise", "p2", aid, fresh)
+    return fresh
+
+
+def release_after_stale_accept() -> CounterexampleResult:
+    """Two owners under the overwriting A2 once early release is enabled.
+
+    A3 clears a record only if it names the exact released instance, which
+    stops a stale release from erasing a NEWER lease of the same owner
+    (owner-only-release), but not from erasing an instance a stale accept
+    has just REINSTALLED over another owner's live lease.  The clear takes
+    the exclusion deadline with it, so the live owner's protection is gone.
+    Neither the renewal qualifier (P2) nor any quarantine length prevents
+    it; the acceptor-side rule of refusing to replace a live lease of a
+    different owner does (see the contract test).  One acceptor restart is
+    enough.  The directed TLC search PaxosLeaseReleaseCrashSearch.cfg, with
+    overwriting acceptors, finds the same kind of violation."""
+
+    def run() -> tuple[str, ...]:
+        sim = Simulator(
+            proposer_duration=1,
+            acceptor_duration=1,
+            quarantine=1,
+            refuse_live_overwrite=False,  # the overwriting A2 it defeats
+        )
+        fresh = _release_after_stale_accept_schedule(sim)
+        for aid in ("a1", "a3"):
+            _deliver_exact(sim, "accept", aid, "p2", fresh)
+        for aid in ("a1", "a3"):
+            _deliver_exact(sim, "accepted", "p2", aid, fresh)
+        return ()
+
+    return _expect_violation("release-after-stale-accept", run)
+
+
+def _renewal_over_overwritten_grant_schedule(sim: Simulator) -> None:
+    """p2 (higher ballot) and p1 (lower ballot) race; a3 promises p2 and then
+    restarts, forgetting the promise.  a1 accepts p1's lease; p2 then
+    acquires through promises from a3 (sent before the crash) and a2, and
+    its Accept reaches a1 and a2.  Under the overwriting A2, a1 replaces
+    p1's live record with p2's.  p2 renews while it still holds its lease,
+    so the qualifier counts a1's and a2's reports of that exact lease as
+    open.  When a3 leaves quarantine it has forgotten its promise to p2 and
+    accepts p1's delayed Accept, completing p1's majority {a1, a3}.  No
+    message is stale, no clock errs, and the quarantine is the full bound."""
+    sim.start_acquire("p2")
+    high = sim.proposers["p2"].ballot
+    _deliver_exact(sim, "prepare", "a3", "p2", high)
+    _deliver_exact(sim, "promise", "p2", "a3", high)
+    sim.tick(1)
+    sim.crash_acceptor("a3")
+    sim.restart_acceptor("a3")
+    sim.tick(1)
+    sim.start_acquire("p1")
+    low = sim.proposers["p1"].ballot
+    assert low is not None and high is not None and low < high
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "prepare", aid, "p1", low)
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "promise", "p1", aid, low)
+    _deliver_exact(sim, "accept", "a1", "p1", low)
+    _deliver_exact(sim, "accepted", "p1", "a1", low)
+    _deliver_exact(sim, "prepare", "a2", "p2", high)
+    _deliver_exact(sim, "promise", "p2", "a2", high)
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "accept", aid, "p2", high)
+    for aid in ("a1", "a2"):
+        for msg in sim.queue:
+            if str(msg.kind) == "accepted" and msg.src == aid and msg.dst == "p2" and msg.ballot == high:
+                sim.deliver_by_id(msg.id)
+                break
+
+
+def renewal_over_overwritten_grant() -> CounterexampleResult:
+    """Two owners with the renewal qualifier in force, once an acceptor may
+    overwrite a live lease of a different owner.  A forgotten promise
+    protected the overwriting lease, and the quarantine covers that attempt
+    but not the renewal built on it.  The TLC configuration
+    PaxosLeaseRenewCrashSearch.cfg finds the same violation on the
+    specification (39-state trace); with RefuseLiveOverwrite it passes."""
+
+    def run() -> tuple[str, ...]:
+        sim = Simulator(
+            proposer_duration=100,
+            acceptor_duration=100,
+            quarantine=100,
+            refuse_live_overwrite=False,  # the overwriting A2
+        )
+        _renewal_over_overwritten_grant_schedule(sim)
+        assert sim.active_owners() == {"p2"}
+        sim.tick(48)
+        sim.start_acquire("p2")  # renewal of the lease p2 still holds
+        renewal = sim.proposers["p2"].ballot
+        for aid in ("a1", "a2"):
+            _deliver_exact(sim, "prepare", aid, "p2", renewal)
+        for aid in ("a1", "a2"):
+            _deliver_exact(sim, "promise", "p2", aid, renewal)
+        for aid in ("a1", "a2"):
+            _deliver_exact(sim, "accept", aid, "p2", renewal)
+        for aid in ("a1", "a2"):
+            _deliver_exact(sim, "accepted", "p2", aid, renewal)
+        sim.tick(51)  # a3 leaves quarantine; p2's renewal runs to t=150
+        low = sim.proposers["p1"].ballot
+        _deliver_exact(sim, "accept", "a3", "p1", low)
+        _deliver_exact(sim, "accepted", "p1", "a3", low)
+        return ()
+
+    return _expect_violation("renewal-over-overwritten-grant", run)
 
 
 def split_brain_read_without_fence() -> CounterexampleResult:
@@ -425,6 +612,85 @@ def unsigned_expiry_underflow() -> CounterexampleResult:
     return _expect_violation("unsigned-expiry-underflow", run)
 
 
+def _release_across_proposer_restart_schedule(sim: Simulator) -> None:
+    """p1's first incarnation acquires under (2, 1, p1) through a1 and a2 and
+    releases, with its prepare, accept and release to a3 still in flight.
+    p1 restarts; its attempt counter starts again, so its new ballot
+    (1, 2, p1) is LOWER than the old one.  a2 restarts and serves the full
+    quarantine, and p1's new incarnation acquires through a2 and a3.  The
+    stale accept of the old incarnation then reaches a3: its ballot is
+    higher and its node is the same, so an acceptor that compares owners by
+    node replaces the live record, and the stale release clears it.  p2
+    then acquires through a1 and a3 while p1 is active."""
+    sim.start_acquire("p1")
+    sim.abandon("p1")
+    sim.start_acquire("p1")
+    old = sim.proposers["p1"].ballot
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "prepare", aid, "p1", old)
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "promise", "p1", aid, old)
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "accept", aid, "p1", old)
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "accepted", "p1", aid, old)
+    sim.release("p1")
+    for aid in ("a1", "a2"):
+        _deliver_exact(sim, "release", aid, "p1", old)
+    sim.crash_proposer("p1")
+    sim.restart_proposer("p1")
+    sim.crash_acceptor("a2")
+    sim.restart_acceptor("a2")
+    sim.tick(sim.quarantine)
+    sim.start_acquire("p1")
+    new = sim.proposers["p1"].ballot
+    assert new is not None and old is not None and new < old
+    for aid in ("a2", "a3"):
+        _deliver_exact(sim, "prepare", aid, "p1", new)
+    for aid in ("a2", "a3"):
+        _deliver_exact(sim, "promise", "p1", aid, new)
+    for aid in ("a2", "a3"):
+        _deliver_exact(sim, "accept", aid, "p1", new)
+    for aid in ("a2", "a3"):
+        _deliver_exact(sim, "accepted", "p1", aid, new)
+    assert sim.proposers["p1"].active
+    _deliver_exact(sim, "accept", "a3", "p1", old)
+    _deliver_exact(sim, "release", "a3", "p1", old)
+    for _ in range(3):
+        sim.start_acquire("p2")
+        sim.abandon("p2")
+    sim.start_acquire("p2")
+    high = sim.proposers["p2"].ballot
+    assert high is not None and high > old
+    for aid in ("a1", "a3"):
+        _deliver_exact(sim, "prepare", aid, "p2", high)
+    for aid in ("a1", "a3"):
+        _deliver_exact(sim, "promise", "p2", aid, high)
+    for aid in ("a1", "a3"):
+        _deliver_exact(sim, "accept", aid, "p2", high)
+    for aid in ("a1", "a3"):
+        _deliver_exact(sim, "accepted", "p2", aid, high)
+
+
+def release_across_proposer_restart() -> CounterexampleResult:
+    """Two owners with A2's refusal in force, if the refusal compares owners
+    by node rather than by proposer incarnation.  A restart resets the
+    attempt counter, so a stale accept request of the previous incarnation
+    can carry a higher ballot than the current lease."""
+
+    def run() -> tuple[str, ...]:
+        sim = Simulator(
+            proposer_duration=2,
+            acceptor_duration=2,
+            quarantine=2,
+            incarnation_owner=False,  # the node-only comparison it defeats
+        )
+        _release_across_proposer_restart_schedule(sim)
+        return ()
+
+    return _expect_violation("release-across-proposer-restart", run)
+
+
 COUNTEREXAMPLES = (
     insufficient_quarantine,
     owner_only_release,
@@ -438,6 +704,9 @@ COUNTEREXAMPLES = (
     stale_accept_overwrites_newer,
     late_promise_reuse,
     stale_owner_open,
+    release_after_stale_accept,
+    release_across_proposer_restart,
+    renewal_over_overwritten_grant,
     split_brain_read_without_fence,
     suspended_event_loop,
     unsigned_expiry_underflow,

@@ -28,11 +28,21 @@ class Acceptor:
     accepted: Optional[Lease] = None
     crashed: bool = False
     quarantine_until: int = 0
-    # A2's acceptor-side repair of the stale-owner trap: refuse to replace
-    # a live accepted lease of a different owner, even under a higher
-    # ballot.  Off by default; the rule of the 2012 paper and of both
-    # audited implementations overwrites.
-    refuse_live_overwrite: bool = False
+    # A2's acceptor-side rule: refuse to replace a live accepted lease of a
+    # different owner, even under a higher ballot.  Required: without it,
+    # renewals and a single acceptor restart give two owners even with the
+    # renewal qualifier (counterexamples.renewal_over_overwritten_grant),
+    # and exact-instance release is unsafe (release_after_stale_accept).
+    # False reproduces the rule of the 2012 paper and of both audited
+    # implementations, which overwrite; it is kept for the counterexamples.
+    refuse_live_overwrite: bool = True
+    # The owner A2 compares is the proposer INCARNATION, (node, restart),
+    # read from the ballot's restart component.  A restarted proposer's
+    # ballots may be lower than its previous incarnation's, so comparing by
+    # node alone lets a delayed accept of the previous incarnation replace
+    # the new one's live lease (counterexamples.release_across_proposer_restart).
+    # False is kept for that counterexample.
+    incarnation_owner: bool = True
 
     def __post_init__(self) -> None:
         if not self.id:
@@ -63,11 +73,17 @@ class Acceptor:
             return None
         if self.refuse_live_overwrite:
             live = self.current_lease(now)
-            if live is not None and live.owner != msg.lease.owner:
+            if live is not None and not self._same_owner(live, msg):
                 return None  # treated exactly like a ballot rejection
         self.promised = msg.ballot
         self.accepted = Lease(msg.lease.owner, msg.ballot, now + self.acceptor_duration)
         return Message(MessageKind.ACCEPTED, self.id, msg.src, ballot=msg.ballot, lease=self.accepted)
+
+    def _same_owner(self, live: Lease, msg: Message) -> bool:
+        assert msg.lease is not None and msg.ballot is not None
+        if live.owner != msg.lease.owner:
+            return False
+        return not self.incarnation_owner or live.ballot[1] == msg.ballot[1]
 
     def on_release(self, msg: Message, now: int) -> None:
         if msg.ballot is None or not self.can_participate(now):
@@ -169,10 +185,15 @@ class Proposer:
         # attempt's renewal base at P1.  A self-owned record under any
         # other ballot is an artifact of an abandoned attempt and must
         # block like a foreign lease.
+        # The base must also still be held when the response is processed,
+        # as the TLA+ DeliverPromise checks: a base that expired while the
+        # renewal was in flight no longer protects anything.
         renewing_this = (
             self.renewal_base is not None
             and msg.lease is not None
             and msg.lease.ballot == self.renewal_base
+            and self.active
+            and self.active_ballot == self.renewal_base
         )
         if msg.lease is None or (
             msg.lease.owner == self.id and (renewing_this or self.self_open_when_inactive)

@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 106 and seed -3272855180840314490 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 862232] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 66 and seed 2724363279006994992 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 4174259] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/mtrencseni/paxoslease/tla/counterexamples/ScalarQuorumCounting.tla
 Parsing file /tmp/Naturals.tla
 Parsing file /tmp/FiniteSets.tla
@@ -8,20 +8,21 @@ Semantic processing of module Naturals
 Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module ScalarQuorumCounting
-Starting... (2026-09-13 10:26:28)
+Starting... (2026-09-28 13:12:31)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-09-13 10:26:29.
-Progress(15) at 2026-09-13 10:26:32: 439,958 states generated (439,958 s/min), 99,134 distinct states found (99,134 ds/min), 43,614 states left on queue.
+Finished computing initial states: 1 distinct state generated at 2026-09-28 13:12:31.
+Progress(14) at 2026-09-28 13:12:34: 306,350 states generated (306,350 s/min), 71,002 distinct states found (71,002 ds/min), 32,759 states left on queue.
 Error: Invariant LeaseExclusivity is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
 /\ phase = (p1 :> "idle" @@ p2 :> "idle")
 /\ certDeadline = (p1 :> (a1 :> 0 @@ a2 :> 0) @@ p2 :> (a1 :> 0 @@ a2 :> 0))
+/\ pInc = (p1 :> 0 @@ p2 :> 0)
 /\ active = {}
 /\ activeBallot = (p1 :> 0 @@ p2 :> 0)
 /\ promised = (a1 :> 0 @@ a2 :> 0)
-/\ accepted = ( a1 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
-  a2 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] )
+/\ accepted = ( a1 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] @@
+  a2 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] )
 /\ now = 0
 /\ usedBallots = {}
 /\ crashedA = {}
@@ -35,7 +36,7 @@ State 1: <Initial predicate>
 /\ pBallot = (p1 :> 0 @@ p2 :> 0)
 /\ okResp = (p1 :> 0 @@ p2 :> 0)
 
-State 2: <StartAcquire line 159, col 9 to line 175, col 52 of module ScalarQuorumCounting>
+State 2: <StartAcquire line 175, col 9 to line 191, col 58 of module ScalarQuorumCounting>
 /\ phase = (p1 :> "preparing" @@ p2 :> "idle")
 /\ usedBallots = {1}
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a1],
@@ -43,7 +44,7 @@ State 2: <StartAcquire line 159, col 9 to line 175, col 52 of module ScalarQuoru
 /\ pendingDeadline = (p1 :> 1 @@ p2 :> 0)
 /\ pBallot = (p1 :> 1 @@ p2 :> 0)
 
-State 3: <StartAcquire line 159, col 9 to line 175, col 52 of module ScalarQuorumCounting>
+State 3: <StartAcquire line 175, col 9 to line 191, col 58 of module ScalarQuorumCounting>
 /\ phase = (p1 :> "preparing" @@ p2 :> "preparing")
 /\ usedBallots = {1, 2}
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a1],
@@ -53,7 +54,7 @@ State 3: <StartAcquire line 159, col 9 to line 175, col 52 of module ScalarQuoru
 /\ pendingDeadline = (p1 :> 1 @@ p2 :> 1)
 /\ pBallot = (p1 :> 1 @@ p2 :> 2)
 
-State 4: <DeliverPrepare line 178, col 5 to line 197, col 52 of module ScalarQuorumCounting>
+State 4: <DeliverPrepare line 194, col 5 to line 213, col 58 of module ScalarQuorumCounting>
 /\ promised = (a1 :> 1 @@ a2 :> 0)
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a2],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
@@ -66,7 +67,7 @@ State 4: <DeliverPrepare line 178, col 5 to line 197, col 52 of module ScalarQuo
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 5: <DeliverPrepare line 178, col 5 to line 197, col 52 of module ScalarQuorumCounting>
+State 5: <DeliverPrepare line 194, col 5 to line 213, col 58 of module ScalarQuorumCounting>
 /\ promised = (a1 :> 1 @@ a2 :> 1)
 /\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
@@ -85,9 +86,9 @@ State 5: <DeliverPrepare line 178, col 5 to line 197, col 52 of module ScalarQuo
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 6: <DeliverPrepare line 178, col 5 to line 197, col 52 of module ScalarQuorumCounting>
-/\ promised = (a1 :> 2 @@ a2 :> 1)
-/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
+State 6: <DeliverPrepare line 194, col 5 to line 213, col 58 of module ScalarQuorumCounting>
+/\ promised = (a1 :> 1 @@ a2 :> 2)
+/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
   [ owner |-> NoOwner,
     ballot |-> 1,
     kind |-> "Promise",
@@ -105,13 +106,13 @@ State 6: <DeliverPrepare line 178, col 5 to line 197, col 52 of module ScalarQuo
   [ owner |-> NoOwner,
     ballot |-> 2,
     kind |-> "Promise",
-    from |-> a1,
+    from |-> a2,
     to |-> p2,
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 7: <DeliverPromise line 215, col 5 to line 230, col 42 of module ScalarQuorumCounting>
-/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
+State 7: <DeliverPromise line 231, col 5 to line 246, col 48 of module ScalarQuorumCounting>
+/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
   [ owner |-> NoOwner,
     ballot |-> 1,
     kind |-> "Promise",
@@ -122,89 +123,145 @@ State 7: <DeliverPromise line 215, col 5 to line 230, col 42 of module ScalarQuo
   [ owner |-> NoOwner,
     ballot |-> 2,
     kind |-> "Promise",
-    from |-> a1,
+    from |-> a2,
     to |-> p2,
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> 1 @@ p2 :> 0)
 
-State 8: <DeliverPromise line 215, col 5 to line 230, col 42 of module ScalarQuorumCounting>
-/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
+State 8: <DeliverPromise line 231, col 5 to line 246, col 48 of module ScalarQuorumCounting>
+/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
   [ owner |-> NoOwner,
     ballot |-> 2,
     kind |-> "Promise",
-    from |-> a1,
+    from |-> a2,
     to |-> p2,
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> 2 @@ p2 :> 0)
 
-State 9: <DeliverPromise line 215, col 5 to line 230, col 42 of module ScalarQuorumCounting>
+State 9: <DeliverPromise line 231, col 5 to line 246, col 48 of module ScalarQuorumCounting>
 /\ okResp = (p1 :> 2 @@ p2 :> 1)
 
-State 10: <DeliverPromise line 215, col 5 to line 230, col 42 of module ScalarQuorumCounting>
-/\ network = {[ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2]}
+State 10: <DeliverPromise line 231, col 5 to line 246, col 48 of module ScalarQuorumCounting>
+/\ network = {[ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1]}
 /\ okResp = (p1 :> 2 @@ p2 :> 2)
 
-State 11: <SendAccept line 234, col 9 to line 245, col 76 of module ScalarQuorumCounting>
+State 11: <SendAccept line 250, col 9 to line 262, col 82 of module ScalarQuorumCounting>
 /\ phase = (p1 :> "accepting" @@ p2 :> "preparing")
-/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2] }
+/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a1 ],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ] }
 
-State 12: <DeliverAcceptReq line 258, col 5 to line 287, col 42 of module ScalarQuorumCounting>
-/\ accepted = ( a1 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
-  a2 :> [owner |-> p1, ballot |-> 1, deadline |-> 1] )
-/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
-  [ballot |-> 1, deadline |-> 1, kind |-> "Accepted", from |-> a2, to |-> p1] }
+State 12: <DeliverAcceptReq line 284, col 5 to line 313, col 48 of module ScalarQuorumCounting>
+/\ accepted = ( a1 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 1] @@
+  a2 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] )
+/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
+  [ballot |-> 1, deadline |-> 1, kind |-> "Accepted", from |-> a1, to |-> p1],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ] }
 
-State 13: <DeliverAccepted line 290, col 5 to line 320, col 42 of module ScalarQuorumCounting>
-/\ certDeadline = (p1 :> (a1 :> 0 @@ a2 :> 1) @@ p2 :> (a1 :> 0 @@ a2 :> 0))
+State 13: <DeliverAccepted line 316, col 5 to line 346, col 48 of module ScalarQuorumCounting>
+/\ certDeadline = (p1 :> (a1 :> 1 @@ a2 :> 0) @@ p2 :> (a1 :> 0 @@ a2 :> 0))
 /\ acceptResp = (p1 :> 1 @@ p2 :> 0)
 
-State 14: <DeliverAccepted line 290, col 5 to line 320, col 42 of module ScalarQuorumCounting>
+State 14: <DeliverAccepted line 316, col 5 to line 346, col 48 of module ScalarQuorumCounting>
 /\ phase = (p1 :> "idle" @@ p2 :> "preparing")
 /\ active = {p1}
 /\ activeBallot = (p1 :> 1 @@ p2 :> 0)
-/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1] }
+/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ] }
 /\ pDeadline = (p1 :> 1 @@ p2 :> 0)
 /\ acceptResp = (p1 :> 2 @@ p2 :> 0)
 
-State 15: <SendAccept line 234, col 9 to line 245, col 76 of module ScalarQuorumCounting>
+State 15: <SendAccept line 250, col 9 to line 262, col 82 of module ScalarQuorumCounting>
 /\ phase = (p1 :> "idle" @@ p2 :> "accepting")
-/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a1],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2] }
+/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a1 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a2 ] }
 
-State 16: <DeliverAcceptReq line 258, col 5 to line 287, col 42 of module ScalarQuorumCounting>
-/\ accepted = ( a1 :> [owner |-> p2, ballot |-> 2, deadline |-> 1] @@
-  a2 :> [owner |-> p1, ballot |-> 1, deadline |-> 1] )
-/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2],
-  [ballot |-> 2, deadline |-> 1, kind |-> "Accepted", from |-> a1, to |-> p2] }
+State 16: <DeliverAcceptReq line 284, col 5 to line 313, col 48 of module ScalarQuorumCounting>
+/\ accepted = ( a1 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 1] @@
+  a2 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 1] )
+/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
+  [ballot |-> 2, deadline |-> 1, kind |-> "Accepted", from |-> a2, to |-> p2],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a1 ] }
 
-State 17: <DeliverAccepted line 290, col 5 to line 320, col 42 of module ScalarQuorumCounting>
-/\ certDeadline = (p1 :> (a1 :> 0 @@ a2 :> 1) @@ p2 :> (a1 :> 1 @@ a2 :> 0))
+State 17: <DeliverAccepted line 316, col 5 to line 346, col 48 of module ScalarQuorumCounting>
+/\ certDeadline = (p1 :> (a1 :> 1 @@ a2 :> 0) @@ p2 :> (a1 :> 0 @@ a2 :> 1))
 /\ acceptResp = (p1 :> 2 @@ p2 :> 1)
 
-State 18: <DeliverAccepted line 290, col 5 to line 320, col 42 of module ScalarQuorumCounting>
+State 18: <DeliverAccepted line 316, col 5 to line 346, col 48 of module ScalarQuorumCounting>
 /\ phase = (p1 :> "idle" @@ p2 :> "idle")
-/\ certDeadline = (p1 :> (a1 :> 0 @@ a2 :> 1) @@ p2 :> (a1 :> 1 @@ a2 :> 0))
+/\ certDeadline = (p1 :> (a1 :> 1 @@ a2 :> 0) @@ p2 :> (a1 :> 0 @@ a2 :> 1))
+/\ pInc = (p1 :> 0 @@ p2 :> 0)
 /\ active = {p1, p2}
 /\ activeBallot = (p1 :> 1 @@ p2 :> 2)
-/\ promised = (a1 :> 2 @@ a2 :> 1)
-/\ accepted = ( a1 :> [owner |-> p2, ballot |-> 2, deadline |-> 1] @@
-  a2 :> [owner |-> p1, ballot |-> 1, deadline |-> 1] )
+/\ promised = (a1 :> 1 @@ a2 :> 2)
+/\ accepted = ( a1 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 1] @@
+  a2 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 1] )
 /\ now = 0
 /\ usedBallots = {1, 2}
 /\ crashedA = {}
-/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2] }
+/\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a1 ] }
 /\ pendingDeadline = (p1 :> 1 @@ p2 :> 1)
 /\ crashedP = {}
 /\ cert = (p1 :> {} @@ p2 :> {})
@@ -214,7 +271,7 @@ State 18: <DeliverAccepted line 290, col 5 to line 320, col 42 of module ScalarQ
 /\ pBallot = (p1 :> 1 @@ p2 :> 2)
 /\ okResp = (p1 :> 2 @@ p2 :> 2)
 
-1647611 states generated, 323702 distinct states found, 92754 states left on queue.
+1610101 states generated, 316317 distinct states found, 90385 states left on queue.
 The depth of the complete state graph search is 18.
 The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 7 and the 95th percentile is 4).
-Finished in 05s at (2026-09-13 10:26:34)
+Finished in 06s at (2026-09-28 13:12:37)

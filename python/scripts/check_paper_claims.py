@@ -1,18 +1,13 @@
 """Cross-check the paper's cited numbers against the recorded results.
 
-Every number the paper cites that a recorded artifact can confirm is listed
-here and checked mechanically: violation trace lengths against the recorded
-TLC trace files, exhaustive distinct-state counts against
-results/verification-results.md, and the large recorded searches against
-their recorded output files.  A mismatch means either the paper or the
-recorded evidence drifted; the target fails until they agree again.
-
-Two kinds of cited numbers are deliberately NOT checked.  Explored-state
-counts of regenerated violation runs are nondeterministic (parallel TLC
-stops wherever a worker first finds the violation), so the paper cites only
-the stable minimum-depth trace lengths for those.  The MaxNetwork
-sensitivity counts in Appendix D came from one-off manual
-runs and are not part of the recorded pipeline.
+Every TLC run the paper cites has a recorded output under results/.  For a
+violation run this script checks that the invariant is reported violated and
+that the error trace has exactly the cited number of states; for a passing
+run, that model checking completed with no error over exactly the cited
+number of distinct states.  It also checks that each number appears in the
+paper, and that the witness count the paper states in words matches the
+witness registry.  A mismatch means the paper or the recorded evidence
+drifted; the target fails until they agree again.
 """
 
 from __future__ import annotations
@@ -25,141 +20,98 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 TEX = ROOT / "paper" / "PaxosLease-Revisited.tex"
 RESULTS = ROOT / "results"
-MD = RESULTS / "verification-results.md"
 
-# Violation results files: each must record the LeaseExclusivity violation
-# and a trace of exactly this length (BFS minimal depth, stable across runs).
-VIOLATION_RUNS: list[str] = [
-    # Each of these runs must exist and must record its violation.  The
-    # trace depth is stable under breadth-first search and the number of
-    # states explored before the violation is not, but neither is asserted
-    # here: what matters is that the counterexample is still found.
-    "counterexample-latetimer.txt",
-    "counterexample-latetimer-3acceptors.txt",
-    "counterexample-owneronlyrelease.txt",
-    "counterexample-scalarquorumcounting.txt",
-    "impl-timely-below.txt",
-    "impl-timely-rdominant.txt",
-    "impl-delayed-shipped.txt",
-    "impl-delayed-colocated.txt",
-    "unsafe-config-3acceptors.txt",
-    "counterexample-staleowneropen.txt",
-    "counterexample-latetimer-tcp.txt",
-    "staleowner-tcp.txt",
-    "impl-delayed-shipped-tcp.txt",
-    "impl-delayed-colocated-tcp.txt",
-    "impl-staleowner.txt",
-]
-
-# Most violation runs check LeaseExclusivity directly; the implementation
-# stale-owner configuration checks the Safety conjunction, and TLC names
-# the conjunction in its violation line.
-VIOLATED_INVARIANT: dict[str, str] = {
-    "impl-staleowner.txt": "Invariant Safety is violated",
+# Violation runs: each recorded file must report the named invariant as
+# violated, with an error trace of exactly the cited length (breadth-first
+# search finds a minimum-depth trace, so the length is stable across runs).
+VIOLATIONS: dict[str, tuple[str, int]] = {
+    "counterexample-latetimer.txt": ("LeaseExclusivity", 27),
+    "counterexample-latetimer-tcp.txt": ("LeaseExclusivity", 27),
+    "counterexample-latetimer-3acceptors.txt": ("LeaseExclusivity", 25),
+    "counterexample-owneronlyrelease.txt": ("LeaseExclusivity", 36),
+    "counterexample-scalarquorumcounting.txt": ("LeaseExclusivity", 18),
+    "counterexample-staleowneropen.txt": ("LeaseExclusivity", 36),
+    "staleowner-tcp.txt": ("LeaseExclusivity", 36),
+    "counterexample-nodeowner.txt": ("Safety", 43),
+    "counterexample-renewcrash.txt": ("Safety", 39),
+    "counterexample-releasecrash.txt": ("Safety", 40),
+    "unsafe-config.txt": ("LeaseExclusivity", 26),
+    "unsafe-config12.txt": ("LeaseExclusivity", 25),
+    "unsafe-config-3acceptors.txt": ("LeaseExclusivity", 24),
+    "impl-timely-below.txt": ("LeaseExclusivity", 26),
+    "impl-timely-rdominant.txt": ("LeaseExclusivity", 26),
+    "impl-delayed-shipped.txt": ("LeaseExclusivity", 27),
+    "impl-delayed-shipped-tcp.txt": ("LeaseExclusivity", 27),
+    "impl-delayed-colocated.txt": ("LeaseExclusivity", 25),
+    "impl-delayed-colocated-tcp.txt": ("LeaseExclusivity", 25),
+    "impl-staleowner.txt": ("Safety", 35),
 }
-DEFAULT_VIOLATION = "Invariant LeaseExclusivity is violated"
 
-# Recorded long searches: the paper or spec/README.md cites the
-# distinct-state count of the recorded run, so the recorded file must
-# contain exactly that count.
-RECORDED_DISTINCT: dict[str, int] = {
-    "retry.txt": 251_904_392,
-    # The A2 repair alone (renewal qualifier deliberately dropped) passes
-    # the retry configuration exhaustively.
-    "staleowner-a2.txt": 337_917_446,
-    # Interaction configurations and the MaxNetwork sensitivity run.
-    "renew-retry.txt": 280_165_306,
+# Passing runs: each recorded file must report that model checking
+# completed with no error, over exactly the cited number of distinct states.
+PASSES: dict[str, int] = {
+    "check-base.txt": 491_037,
+    "check-renew-release.txt": 7_717,
+    "check-crash-restart.txt": 37_425_056,
+    "check-drift.txt": 40_784,
+    "check-qep.txt": 76_749_192,
+    "check-qep23.txt": 36_772_096,
+    "check-redeliver.txt": 1_857_563,
+    "release-race.txt": 23_743_497,
     "retry-redeliver.txt": 53_723_103,
     "renew-release-stale.txt": 204_050,
-    "retry-mn5.txt": 465_991_204,
+    "nodeowner-base.txt": 220_119,
+    "renewcrash-a2.txt": 6_330_050,
+    "latetimer-a2.txt": 23_777_320,
+    "releasecrash-a2.txt": 224_164_193,
+    "retry.txt": 2_179_760_458,
+    "renew-retry.txt": 2_411_951_538,
+    "composition.txt": 2_095,
+    "impl-timely-boundary.txt": 37_160_904,
+    "impl-timely-rdominant-safe.txt": 37_476_080,
+    "impl-timely-shipped.txt": 18_160_464,
 }
 
-# Exhaustive distinct-state counts of passing configurations: deterministic,
-# cited in the paper's tables, regenerated into verification-results.md.
-MD_DISTINCT: list[int] = [
-    573_975,      # Base
-    7_717,        # Renew/release
-    10_059_404,   # Crash/restart
-    19_656,       # Drift
-    20_447_948,   # Quarantine = D_P (1,2,1)
-    9_867_548,    # Quarantine = D_P (2,3,2)
-    1_857_563,    # Redeliver (no crash)
-    2_095,        # Lease+Paxos composition
-    37_160_904,   # Impl timely boundary (2,2,2)
-    37_476_080,   # Impl timely R-dominant safe (1,2,2)
-    18_160_464,   # Impl timely shipped (2,1,2)
-]
-
-# Each number above, as the paper writes it.  The tex is normalized by
-# replacing "{,}" with "," before searching.
-TEX_SNIPPETS: list[str] = [
-    "27 states",
-    "36 states",
-    "18 states",
-    "26 states",
-    "25-state trace",
-    "27-state trace",
-    "25-state two-owner trace",
-    "24-state trace",
-    "573,975",
-    "7,717",
-    "10,059,404",
-    "19,656",
-    "20,447,948",
-    "9,867,548",
-    "1,857,563",
-    "2,095",
-    "37,160,904",
-    "37,476,080",
-    "18,160,464",
-    "251,904,392",
-    "337,917,446",
-    "280,165,306",
-    "53,723,103",
-    "204,050",
-    "465,991,204",
-    "35-state",
-]
+def _tex_number(n: int) -> str:
+    return f"{n:,}"
 
 
 def main() -> None:
     failures: list[str] = []
 
     tex = TEX.read_text(encoding="utf-8").replace("{,}", ",")
-    md = MD.read_text(encoding="utf-8")
 
-    for name in VIOLATION_RUNS:
+    for name, (invariant, depth) in VIOLATIONS.items():
         path = RESULTS / name
         if not path.exists():
             failures.append(f"{name}: recorded results file missing")
             continue
         text = path.read_text(encoding="utf-8")
-        expected_violation = VIOLATED_INVARIANT.get(name, DEFAULT_VIOLATION)
-        if expected_violation not in text:
-            failures.append(f"{name}: expected '{expected_violation}' not recorded")
+        if f"Invariant {invariant} is violated" not in text:
+            failures.append(f"{name}: expected violation of {invariant} not recorded")
+        states = len(re.findall(r"^State \d+:", text, flags=re.M))
+        if states != depth:
+            failures.append(f"{name}: trace has {states} states, paper cites {depth}")
+        if f"{depth}-state" not in tex and f"{depth} states" not in tex:
+            failures.append(f"paper: trace length {depth} of {name} not cited")
 
-    for name, distinct in RECORDED_DISTINCT.items():
+    for name, distinct in PASSES.items():
         path = RESULTS / name
         if not path.exists():
-            continue  # already reported above
+            failures.append(f"{name}: recorded results file missing")
+            continue
         text = path.read_text(encoding="utf-8")
+        if "Model checking completed. No error has been found" not in text:
+            failures.append(f"{name}: recorded run did not complete without error")
         if not re.search(rf"\b{distinct} distinct states found\b", text):
             failures.append(f"{name}: recorded run does not show {distinct} distinct states")
-
-    for distinct in MD_DISTINCT:
-        if not re.search(rf"\b{distinct} distinct states found\b", md):
-            failures.append(
-                f"verification-results.md: missing exhaustive count {distinct}"
-            )
-
-    for snippet in TEX_SNIPPETS:
-        if snippet not in tex:
-            failures.append(f"paper: cited number or phrase not found: {snippet!r}")
+        if _tex_number(distinct) not in tex:
+            failures.append(f"paper: count {_tex_number(distinct)} of {name} not cited")
 
     # The witness count the paper states in words must match the recorded
     # witness registry.
     witnesses = json.loads((RESULTS / "counterexamples.json").read_text(encoding="utf-8"))
-    count_words = {13: "thirteen", 14: "fourteen", 15: "fifteen", 16: "sixteen", 17: "seventeen"}
+    count_words = {13: "thirteen", 14: "fourteen", 15: "fifteen", 16: "sixteen", 17: "seventeen", 18: "eighteen"}
     word = count_words.get(len(witnesses))
     if word is None:
         failures.append(f"witness registry has unmapped count {len(witnesses)}")
@@ -177,9 +129,8 @@ def main() -> None:
             print(f"FAIL {f}", file=sys.stderr)
         sys.exit(1)
     print(
-        f"paper claims consistent: {len(VIOLATION_RUNS)} violation runs, "
-        f"{len(RECORDED_DISTINCT)} recorded searches, "
-        f"{len(MD_DISTINCT)} exhaustive counts, {len(TEX_SNIPPETS)} snippets"
+        f"paper claims consistent: {len(VIOLATIONS)} violation runs, "
+        f"{len(PASSES)} passing runs"
     )
 
 

@@ -1,0 +1,29 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 44 and seed -728965250758861466 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 2491] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/mtrencseni/paxoslease/tla/spec/PaxosLeaseChecked.tla
+Parsing file /home/mtrencseni/paxoslease/tla/spec/PaxosLease.tla
+Parsing file /tmp/Naturals.tla
+Parsing file /tmp/FiniteSets.tla
+Parsing file /tmp/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module PaxosLease
+Semantic processing of module PaxosLeaseChecked
+Starting... (2026-09-28 13:26:10)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-28 13:26:10.
+Progress(15) at 2026-09-28 13:26:13: 202,641 states generated (202,641 s/min), 53,997 distinct states found (53,997 ds/min), 17,298 states left on queue.
+Progress(34) at 2026-09-28 13:27:13: 20,278,265 states generated (20,075,624 s/min), 5,627,161 distinct states found (5,573,164 ds/min), 611,840 states left on queue.
+Progress(40) at 2026-09-28 13:28:13: 40,817,608 states generated (20,539,343 s/min), 11,341,230 distinct states found (5,714,069 ds/min), 994,469 states left on queue.
+Progress(46) at 2026-09-28 13:29:13: 61,662,831 states generated (20,845,223 s/min), 17,268,622 distinct states found (5,927,392 ds/min), 971,023 states left on queue.
+Progress(51) at 2026-09-28 13:30:13: 81,986,299 states generated (20,323,468 s/min), 22,527,974 distinct states found (5,259,352 ds/min), 445,337 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 8.1E-5
+  based on the actual fingerprints:  val = 6.4E-5
+86406784 states generated, 23743497 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 54.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 7 and the 95th percentile is 3).
+Finished in 04min 17s at (2026-09-28 13:30:27)

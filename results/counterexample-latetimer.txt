@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 11 and seed 1952164453939626064 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 859858] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 80 and seed -4539004131012968446 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 4174632] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/mtrencseni/paxoslease/tla/counterexamples/LateTimer.tla
 Parsing file /tmp/Naturals.tla
 Parsing file /tmp/FiniteSets.tla
@@ -8,20 +8,23 @@ Semantic processing of module Naturals
 Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module LateTimer
-Starting... (2026-09-13 10:25:32)
+Starting... (2026-09-28 13:12:40)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-09-13 10:25:32.
-Progress(13) at 2026-09-13 10:25:35: 477,224 states generated (477,224 s/min), 124,202 distinct states found (124,202 ds/min), 52,275 states left on queue.
+Finished computing initial states: 1 distinct state generated at 2026-09-28 13:12:40.
+Progress(12) at 2026-09-28 13:12:43: 322,304 states generated (322,304 s/min), 96,642 distinct states found (96,642 ds/min), 47,218 states left on queue.
+Progress(23) at 2026-09-28 13:13:44: 41,072,646 states generated (40,750,342 s/min), 9,582,765 distinct states found (9,486,123 ds/min), 2,146,916 states left on queue.
+Progress(26) at 2026-09-28 13:14:44: 83,334,326 states generated (42,261,680 s/min), 17,841,786 distinct states found (8,259,021 ds/min), 1,925,288 states left on queue.
 Error: Invariant LeaseExclusivity is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
 /\ phase = (p1 :> "idle" @@ p2 :> "idle")
 /\ certDeadline = (p1 :> (a1 :> 0 @@ a2 :> 0) @@ p2 :> (a1 :> 0 @@ a2 :> 0))
+/\ pInc = (p1 :> 0 @@ p2 :> 0)
 /\ active = {}
 /\ activeBallot = (p1 :> 0 @@ p2 :> 0)
 /\ promised = (a1 :> 0 @@ a2 :> 0)
-/\ accepted = ( a1 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
-  a2 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] )
+/\ accepted = ( a1 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] @@
+  a2 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] )
 /\ now = 0
 /\ usedBallots = {}
 /\ crashedA = {}
@@ -35,14 +38,14 @@ State 1: <Initial predicate>
 /\ pBallot = (p1 :> 0 @@ p2 :> 0)
 /\ okResp = (p1 :> {} @@ p2 :> {})
 
-State 2: <StartAcquire line 156, col 9 to line 171, col 52 of module LateTimer>
+State 2: <StartAcquire line 172, col 9 to line 187, col 58 of module LateTimer>
 /\ phase = (p1 :> "preparing" @@ p2 :> "idle")
 /\ usedBallots = {1}
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a1],
   [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a2] }
 /\ pBallot = (p1 :> 1 @@ p2 :> 0)
 
-State 3: <StartAcquire line 156, col 9 to line 171, col 52 of module LateTimer>
+State 3: <StartAcquire line 172, col 9 to line 187, col 58 of module LateTimer>
 /\ phase = (p1 :> "preparing" @@ p2 :> "preparing")
 /\ usedBallots = {1, 2}
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a1],
@@ -51,7 +54,7 @@ State 3: <StartAcquire line 156, col 9 to line 171, col 52 of module LateTimer>
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2] }
 /\ pBallot = (p1 :> 1 @@ p2 :> 2)
 
-State 4: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer>
+State 4: <DeliverPrepare line 190, col 5 to line 209, col 58 of module LateTimer>
 /\ promised = (a1 :> 1 @@ a2 :> 0)
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a2],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
@@ -64,7 +67,7 @@ State 4: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 5: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer>
+State 5: <DeliverPrepare line 190, col 5 to line 209, col 58 of module LateTimer>
 /\ promised = (a1 :> 1 @@ a2 :> 1)
 /\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
@@ -83,7 +86,7 @@ State 5: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 6: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer>
+State 6: <DeliverPrepare line 190, col 5 to line 209, col 58 of module LateTimer>
 /\ promised = (a1 :> 2 @@ a2 :> 1)
 /\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
   [ owner |-> NoOwner,
@@ -108,7 +111,7 @@ State 6: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 7: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer>
+State 7: <DeliverPrepare line 190, col 5 to line 209, col 58 of module LateTimer>
 /\ promised = (a1 :> 2 @@ a2 :> 2)
 /\ network = { [ owner |-> NoOwner,
     ballot |-> 1,
@@ -139,7 +142,7 @@ State 7: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 8: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer>
+State 8: <DeliverPromise line 227, col 5 to line 241, col 48 of module LateTimer>
 /\ network = { [ owner |-> NoOwner,
     ballot |-> 1,
     kind |-> "Promise",
@@ -163,7 +166,7 @@ State 8: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> {a1} @@ p2 :> {})
 
-State 9: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer>
+State 9: <DeliverPromise line 227, col 5 to line 241, col 48 of module LateTimer>
 /\ network = { [ owner |-> NoOwner,
     ballot |-> 2,
     kind |-> "Promise",
@@ -180,7 +183,7 @@ State 9: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {})
 
-State 10: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer>
+State 10: <DeliverPromise line 227, col 5 to line 241, col 48 of module LateTimer>
 /\ network = { [ owner |-> NoOwner,
     ballot |-> 2,
     kind |-> "Promise",
@@ -190,90 +193,150 @@ State 10: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTime
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {a1})
 
-State 11: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer>
+State 11: <DeliverPromise line 227, col 5 to line 241, col 48 of module LateTimer>
 /\ network = {}
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {a1, a2})
 
-State 12: <CrashAcceptor line 410, col 9 to line 419, col 42 of module LateTimer>
+State 12: <CrashAcceptor line 445, col 9 to line 454, col 48 of module LateTimer>
 /\ promised = (a1 :> 0 @@ a2 :> 2)
 /\ crashedA = {a1}
 
-State 13: <CrashAcceptor line 410, col 9 to line 419, col 42 of module LateTimer>
+State 13: <CrashAcceptor line 445, col 9 to line 454, col 48 of module LateTimer>
 /\ promised = (a1 :> 0 @@ a2 :> 0)
 /\ crashedA = {a1, a2}
 
-State 14: <RestartAcceptor line 422, col 5 to line 430, col 35 of module LateTimer>
+State 14: <RestartAcceptor line 457, col 5 to line 465, col 41 of module LateTimer>
 /\ crashedA = {a2}
 /\ quarantineUntil = (a1 :> 2 @@ a2 :> 0)
 
-State 15: <RestartAcceptor line 422, col 5 to line 430, col 35 of module LateTimer>
+State 15: <RestartAcceptor line 457, col 5 to line 465, col 41 of module LateTimer>
 /\ crashedA = {}
 /\ quarantineUntil = (a1 :> 2 @@ a2 :> 2)
 
-State 16: <Tick line 377, col 5 to line 383, col 78 of module LateTimer>
+State 16: <Tick line 403, col 5 to line 409, col 84 of module LateTimer>
 /\ now = 1
 
-State 17: <SendAccept line 229, col 9 to line 240, col 76 of module LateTimer>
+State 17: <SendAccept line 245, col 9 to line 257, col 82 of module LateTimer>
 /\ phase = (p1 :> "accepting" @@ p2 :> "preparing")
-/\ network = { [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2] }
+/\ network = { [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a1 ],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ] }
 /\ pendingDeadline = (p1 :> 3 @@ p2 :> 0)
 
-State 18: <SendAccept line 229, col 9 to line 240, col 76 of module LateTimer>
+State 18: <SendAccept line 245, col 9 to line 257, col 82 of module LateTimer>
 /\ phase = (p1 :> "accepting" @@ p2 :> "accepting")
-/\ network = { [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a1],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2] }
+/\ network = { [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a1 ],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a1 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a2 ] }
 /\ pendingDeadline = (p1 :> 3 @@ p2 :> 3)
 
-State 19: <Tick line 377, col 5 to line 383, col 78 of module LateTimer>
+State 19: <Tick line 403, col 5 to line 409, col 84 of module LateTimer>
 /\ now = 2
 
-State 20: <DeliverAcceptReq line 253, col 5 to line 282, col 42 of module LateTimer>
+State 20: <DeliverAcceptReq line 279, col 5 to line 308, col 48 of module LateTimer>
 /\ promised = (a1 :> 1 @@ a2 :> 0)
-/\ accepted = ( a1 :> [owner |-> p1, ballot |-> 1, deadline |-> 4] @@
-  a2 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] )
-/\ network = { [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a1],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2],
-  [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p1] }
+/\ accepted = ( a1 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 4] @@
+  a2 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] )
+/\ network = { [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p1],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a1 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a2 ] }
 
-State 21: <DeliverAcceptReq line 253, col 5 to line 282, col 42 of module LateTimer>
+State 21: <DeliverAcceptReq line 279, col 5 to line 308, col 48 of module LateTimer>
 /\ promised = (a1 :> 1 @@ a2 :> 1)
-/\ accepted = ( a1 :> [owner |-> p1, ballot |-> 1, deadline |-> 4] @@
-  a2 :> [owner |-> p1, ballot |-> 1, deadline |-> 4] )
-/\ network = { [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a1],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2],
-  [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p1],
-  [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p1] }
-
-State 22: <DeliverAcceptReq line 253, col 5 to line 282, col 42 of module LateTimer>
-/\ promised = (a1 :> 2 @@ a2 :> 1)
-/\ accepted = ( a1 :> [owner |-> p2, ballot |-> 2, deadline |-> 4] @@
-  a2 :> [owner |-> p1, ballot |-> 1, deadline |-> 4] )
-/\ network = { [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2],
-  [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p1],
+/\ accepted = ( a1 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 4] @@
+  a2 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 4] )
+/\ network = { [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p1],
   [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p1],
-  [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p2] }
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a1 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a2 ] }
 
-State 23: <DeliverAcceptReq line 253, col 5 to line 282, col 42 of module LateTimer>
+State 22: <DeliverAcceptReq line 279, col 5 to line 308, col 48 of module LateTimer>
+/\ promised = (a1 :> 2 @@ a2 :> 1)
+/\ accepted = ( a1 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 4] @@
+  a2 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 4] )
+/\ network = { [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p1],
+  [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p1],
+  [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p2],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a2 ] }
+
+State 23: <DeliverAcceptReq line 279, col 5 to line 308, col 48 of module LateTimer>
 /\ promised = (a1 :> 2 @@ a2 :> 2)
-/\ accepted = ( a1 :> [owner |-> p2, ballot |-> 2, deadline |-> 4] @@
-  a2 :> [owner |-> p2, ballot |-> 2, deadline |-> 4] )
+/\ accepted = ( a1 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 4] @@
+  a2 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 4] )
 /\ network = { [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p1],
   [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p1],
   [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p2],
   [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p2] }
 
-State 24: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTimer>
-/\ certDeadline = (p1 :> (a1 :> 4 @@ a2 :> 0) @@ p2 :> (a1 :> 0 @@ a2 :> 0))
-/\ network = { [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p1],
+State 24: <DeliverAccepted line 311, col 5 to line 341, col 48 of module LateTimer>
+/\ certDeadline = (p1 :> (a1 :> 0 @@ a2 :> 4) @@ p2 :> (a1 :> 0 @@ a2 :> 0))
+/\ network = { [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p1],
   [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p2],
   [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p2] }
-/\ acceptResp = (p1 :> {a1} @@ p2 :> {})
+/\ acceptResp = (p1 :> {a2} @@ p2 :> {})
 
-State 25: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTimer>
+State 25: <DeliverAccepted line 311, col 5 to line 341, col 48 of module LateTimer>
 /\ phase = (p1 :> "idle" @@ p2 :> "accepting")
 /\ certDeadline = (p1 :> (a1 :> 4 @@ a2 :> 4) @@ p2 :> (a1 :> 0 @@ a2 :> 0))
 /\ active = {p1}
@@ -284,19 +347,20 @@ State 25: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTim
 /\ pDeadline = (p1 :> 3 @@ p2 :> 0)
 /\ acceptResp = (p1 :> {a1, a2} @@ p2 :> {})
 
-State 26: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTimer>
+State 26: <DeliverAccepted line 311, col 5 to line 341, col 48 of module LateTimer>
 /\ certDeadline = (p1 :> (a1 :> 4 @@ a2 :> 4) @@ p2 :> (a1 :> 4 @@ a2 :> 0))
 /\ network = {[ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p2]}
 /\ acceptResp = (p1 :> {a1, a2} @@ p2 :> {a1})
 
-State 27: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTimer>
+State 27: <DeliverAccepted line 311, col 5 to line 341, col 48 of module LateTimer>
 /\ phase = (p1 :> "idle" @@ p2 :> "idle")
 /\ certDeadline = (p1 :> (a1 :> 4 @@ a2 :> 4) @@ p2 :> (a1 :> 4 @@ a2 :> 4))
+/\ pInc = (p1 :> 0 @@ p2 :> 0)
 /\ active = {p1, p2}
 /\ activeBallot = (p1 :> 1 @@ p2 :> 2)
 /\ promised = (a1 :> 2 @@ a2 :> 2)
-/\ accepted = ( a1 :> [owner |-> p2, ballot |-> 2, deadline |-> 4] @@
-  a2 :> [owner |-> p2, ballot |-> 2, deadline |-> 4] )
+/\ accepted = ( a1 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 4] @@
+  a2 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 4] )
 /\ now = 2
 /\ usedBallots = {1, 2}
 /\ crashedA = {}
@@ -310,7 +374,7 @@ State 27: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTim
 /\ pBallot = (p1 :> 1 @@ p2 :> 2)
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {a1, a2})
 
-33952048 states generated, 6105684 distinct states found, 338527 states left on queue.
+84213644 states generated, 18009003 distinct states found, 1916366 states left on queue.
 The depth of the complete state graph search is 27.
 The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 9 and the 95th percentile is 3).
-Finished in 46s at (2026-09-13 10:26:18)
+Finished in 02min 05s at (2026-09-28 13:14:45)

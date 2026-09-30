@@ -4,9 +4,9 @@
     "minimal_fix": "quarantine for at least the proposer attempt duration in real time",
     "scenario": "insufficient-quarantine",
     "trace": [
-      "violation: lease exclusivity violated: {'p2', 'p1'}"
+      "violation: lease exclusivity violated: {'p1', 'p2'}"
     ],
-    "violated_invariant": "lease exclusivity violated: {'p2', 'p1'}"
+    "violated_invariant": "lease exclusivity violated: {'p1', 'p2'}"
   },
   {
     "category": "illustrative-example",
@@ -93,21 +93,48 @@
   },
   {
     "category": "simulator-execution",
-    "minimal_fix": "start the attempt deadline when Prepare is sent, so prepare responses expire with the attempt that collected them",
+    "minimal_fix": "with acceptors that overwrite, start the attempt deadline when Prepare is sent, so prepare responses expire with the attempt that collected them; A2's acceptor-side rule also prevents this",
     "scenario": "late-promise-reuse",
     "trace": [
-      "violation: lease exclusivity violated: {'p2', 'p1'}"
+      "violation: lease exclusivity violated: {'p1', 'p2'}"
     ],
-    "violated_invariant": "lease exclusivity violated: {'p2', 'p1'}"
+    "violated_invariant": "lease exclusivity violated: {'p1', 'p2'}"
   },
   {
     "category": "simulator-execution",
-    "minimal_fix": "count a reported own lease as open only while renewing (currently active); a stale own record must block like a foreign lease",
+    "minimal_fix": "with acceptors that overwrite, count a reported own lease as open only while renewing (currently active); a stale own record must block like a foreign lease; A2's acceptor-side rule also prevents this",
     "scenario": "stale-owner-open",
     "trace": [
-      "violation: lease exclusivity violated: {'p2', 'p1'}"
+      "violation: lease exclusivity violated: {'p1', 'p2'}"
     ],
-    "violated_invariant": "lease exclusivity violated: {'p2', 'p1'}"
+    "violated_invariant": "lease exclusivity violated: {'p1', 'p2'}"
+  },
+  {
+    "category": "simulator-execution",
+    "minimal_fix": "with early release enabled, an acceptor must never replace a live lease of a different owner (A2's acceptor-side rule); exact-instance matching in A3 is not enough",
+    "scenario": "release-after-stale-accept",
+    "trace": [
+      "violation: lease exclusivity violated: {'p1', 'p2'}"
+    ],
+    "violated_invariant": "lease exclusivity violated: {'p1', 'p2'}"
+  },
+  {
+    "category": "simulator-execution",
+    "minimal_fix": "A2 must compare owners as proposer incarnations (node and restart counter), since a restarted proposer's ballots may be lower than its previous incarnation's",
+    "scenario": "release-across-proposer-restart",
+    "trace": [
+      "violation: lease exclusivity violated: {'p1', 'p2'}"
+    ],
+    "violated_invariant": "lease exclusivity violated: {'p1', 'p2'}"
+  },
+  {
+    "category": "simulator-execution",
+    "minimal_fix": "an acceptor must never replace a live lease of a different owner (A2's acceptor-side rule); the renewal qualifier alone does not prevent this",
+    "scenario": "renewal-over-overwritten-grant",
+    "trace": [
+      "violation: lease exclusivity violated: {'p1', 'p2'}"
+    ],
+    "violated_invariant": "lease exclusivity violated: {'p1', 'p2'}"
   },
   {
     "category": "unit-rule",

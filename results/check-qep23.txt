@@ -1,0 +1,30 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 1 and seed 8415257097299289507 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 4147207] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/mtrencseni/paxoslease/tla/spec/PaxosLeaseChecked.tla
+Parsing file /home/mtrencseni/paxoslease/tla/spec/PaxosLease.tla
+Parsing file /tmp/Naturals.tla
+Parsing file /tmp/FiniteSets.tla
+Parsing file /tmp/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module PaxosLease
+Semantic processing of module PaxosLeaseChecked
+Starting... (2026-09-28 12:55:56)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-28 12:55:57.
+Progress(11) at 2026-09-28 12:56:00: 303,682 states generated (303,682 s/min), 102,019 distinct states found (102,019 ds/min), 57,710 states left on queue.
+Progress(19) at 2026-09-28 12:57:00: 33,864,308 states generated (33,560,626 s/min), 8,299,436 distinct states found (8,197,417 ds/min), 2,363,906 states left on queue.
+Progress(22) at 2026-09-28 12:58:00: 69,626,440 states generated (35,762,132 s/min), 16,181,390 distinct states found (7,881,954 ds/min), 3,547,331 states left on queue.
+Progress(24) at 2026-09-28 12:59:00: 106,005,926 states generated (36,379,486 s/min), 23,510,795 distinct states found (7,329,405 ds/min), 3,722,201 states left on queue.
+Progress(26) at 2026-09-28 13:00:00: 143,551,627 states generated (37,545,701 s/min), 30,386,175 distinct states found (6,875,380 ds/min), 2,818,753 states left on queue.
+Progress(33) at 2026-09-28 13:01:00: 182,496,099 states generated (38,944,472 s/min), 36,478,461 distinct states found (6,092,286 ds/min), 203,694 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 2.9E-4
+  based on the actual fingerprints:  val = 6.1E-5
+184594759 states generated, 36772096 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 39.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 9 and the 95th percentile is 3).
+Finished in 05min 08s at (2026-09-28 13:01:05)

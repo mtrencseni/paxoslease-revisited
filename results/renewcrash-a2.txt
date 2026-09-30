@@ -1,0 +1,27 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 23 and seed -5535411382985794758 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 4192228] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/mtrencseni/paxoslease/tla/spec/PaxosLeaseRenewCrashSearch.tla
+Parsing file /home/mtrencseni/paxoslease/tla/spec/PaxosLease.tla
+Parsing file /tmp/Naturals.tla
+Parsing file /tmp/FiniteSets.tla
+Parsing file /tmp/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module PaxosLease
+Semantic processing of module PaxosLeaseRenewCrashSearch
+Starting... (2026-09-28 13:23:35)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-09-28 13:23:35.
+Progress(14) at 2026-09-28 13:23:38: 364,100 states generated (364,100 s/min), 47,444 distinct states found (47,444 ds/min), 15,651 states left on queue.
+Progress(31) at 2026-09-28 13:24:38: 26,766,058 states generated (26,401,958 s/min), 3,053,138 distinct states found (3,005,694 ds/min), 634,347 states left on queue.
+Progress(36) at 2026-09-28 13:25:38: 53,545,712 states generated (26,779,654 s/min), 5,401,227 distinct states found (2,348,089 ds/min), 367,462 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 2.1E-5
+  based on the actual fingerprints:  val = 4.4E-5
+66700448 states generated, 6330050 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 43.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 10 and the 95th percentile is 4).
+Finished in 02min 32s at (2026-09-28 13:26:07)

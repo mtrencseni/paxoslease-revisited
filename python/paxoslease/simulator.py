@@ -21,7 +21,8 @@ class Simulator:
     unsafe: bool = False
     timer_at_quorum: bool = False
     self_open_when_inactive: bool = False
-    refuse_live_overwrite: bool = False
+    refuse_live_overwrite: bool = True
+    incarnation_owner: bool = True
     trace: TraceRecorder | None = None
 
     def __post_init__(self) -> None:
@@ -46,6 +47,7 @@ class Simulator:
                 aid,
                 self.acceptor_duration,
                 refuse_live_overwrite=self.refuse_live_overwrite,
+                incarnation_owner=self.incarnation_owner,
             )
             for aid in self.acceptor_ids
         }

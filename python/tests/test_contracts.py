@@ -120,7 +120,7 @@ def test_structured_counterexamples_are_reproducible() -> None:
     assert all(r.category in allowed for r in results)
     # The strongest Python witnesses are real protocol executions.
     executions = {r.scenario for r in results if r.category.endswith("execution")}
-    assert {"insufficient-quarantine", "late-promise-reuse", "skipped-paxos-recovery"} <= executions
+    assert {"insufficient-quarantine", "late-promise-reuse", "skipped-paxos-recovery", "release-after-stale-accept", "renewal-over-overwritten-grant"} <= executions
 
 
 def _late_promise_schedule(sim: Simulator) -> None:
@@ -168,6 +168,7 @@ def test_renewal_qualifier_blocks_stale_owner_open_schedule() -> None:
         proposer_duration=2,
         acceptor_duration=2,
         quarantine=2,
+        refuse_live_overwrite=False,  # the qualifier alone
     )
     _stale_owner_open_schedule(sim)
     assert not any(
@@ -202,6 +203,104 @@ def test_acceptor_refusal_blocks_stale_owner_schedule_without_p2_qualifier() -> 
     )
 
 
+def test_acceptor_refusal_blocks_release_after_stale_accept() -> None:
+    # The same schedule that gives two owners under the unmodified rules
+    # (counterexamples.release_after_stale_accept) is blocked by the
+    # acceptor-side rule: a3 refuses to replace p1's live lease with the
+    # stale p2 instance, so the stale release matches nothing, a3 reports
+    # p1's live lease to p2's fresh prepare, and p2 never sends an accept.
+    from paxoslease.counterexamples import _release_after_stale_accept_schedule
+    from paxoslease.messages import MessageKind
+
+    sim = Simulator(
+        proposer_duration=1,
+        acceptor_duration=1,
+        quarantine=1,
+        refuse_live_overwrite=True,
+    )
+    fresh = _release_after_stale_accept_schedule(sim)
+    assert sim.acceptors["a3"].accepted is not None
+    assert sim.acceptors["a3"].accepted.owner == "p1"
+    assert not any(
+        msg.kind == MessageKind.ACCEPT and msg.src == "p2" and msg.ballot == fresh
+        for msg in sim.queue
+    )
+    while sim.queue:
+        sim.deliver(0)
+    assert sim.active_owners() == {"p1"}
+
+
+def test_acceptor_refusal_blocks_renewal_over_overwritten_grant() -> None:
+    # With A2's acceptor-side rule (the default), a1 refuses p2's Accept
+    # while it holds p1's live lease, so p2 never completes its acquisition
+    # and has nothing to renew.
+    from paxoslease.counterexamples import _renewal_over_overwritten_grant_schedule
+
+    sim = Simulator(proposer_duration=100, acceptor_duration=100, quarantine=100)
+    _renewal_over_overwritten_grant_schedule(sim)
+    assert sim.acceptors["a1"].accepted is not None
+    assert sim.acceptors["a1"].accepted.owner == "p1"
+    assert "p2" not in sim.active_owners()
+
+
+def test_renewal_qualifier_requires_base_still_held() -> None:
+    # P2 counts a report of the renewal base as open only while the base is
+    # still held.  Here the base expires while the renewal is in flight, a
+    # stale Accept reinstalls it at z over p1's live lease (overwriting A2),
+    # and z reports it; the expired base must not count.
+    from paxoslease.counterexamples import _deliver_exact as dl
+    from paxoslease.messages import MessageKind
+
+    sim = Simulator(
+        proposer_ids=("A", "B"),
+        acceptor_ids=("x", "y", "z"),
+        proposer_duration=10,
+        acceptor_duration=10,
+        quarantine=10,
+        refuse_live_overwrite=False,
+    )
+    for _ in range(9):
+        sim.proposers["B"].next_ballot()
+    sim.start_acquire("B")
+    base = sim.proposers["B"].ballot
+    for a in "xy":
+        dl(sim, "prepare", a, "B", base)
+    for a in "xy":
+        dl(sim, "promise", "B", a, base)
+    for a in "xy":
+        dl(sim, "accept", a, "B", base)
+    for a in "xy":
+        dl(sim, "accepted", "B", a, base)
+    for a in "xy":
+        sim.crash_acceptor(a)
+        sim.restart_acceptor(a)
+    sim.tick(9)
+    sim.start_acquire("B")
+    renewal = sim.proposers["B"].ballot
+    sim.tick(1)  # the base expires with the renewal in flight
+    sim.start_acquire("A")
+    low = sim.proposers["A"].ballot
+    for a in "yz":
+        dl(sim, "prepare", a, "A", low)
+    for a in "yz":
+        dl(sim, "promise", "A", a, low)
+    for a in "yz":
+        dl(sim, "accept", a, "A", low)
+    for a in "yz":
+        dl(sim, "accepted", "A", a, low)
+    sim.tick(1)
+    dl(sim, "accept", "z", "B", base)  # stale Accept reinstalls the base at z
+    for a in "xz":
+        dl(sim, "prepare", a, "B", renewal)
+    for a in "xz":
+        dl(sim, "promise", "B", a, renewal)
+    assert not any(
+        msg.kind == MessageKind.ACCEPT and msg.src == "B" and msg.ballot == renewal
+        for msg in sim.queue
+    )
+    assert sim.active_owners() == {"A"}
+
+
 def test_trace_records_mapped_actions_and_invariant_status() -> None:
     trace = TraceRecorder()
     sim = Simulator(proposer_duration=4, acceptor_duration=4, quarantine=4, trace=trace)
@@ -212,3 +311,20 @@ def test_trace_records_mapped_actions_and_invariant_status() -> None:
     assert trace.events
     assert all(event.invariant_ok for event in trace.events)
     assert {event.event for event in trace.events} >= {"StartAcquire", "DeliverPrepare"}
+
+
+def test_incarnation_owner_blocks_release_across_proposer_restart() -> None:
+    # The schedule of counterexamples.release_across_proposer_restart, with
+    # A2 comparing owners as proposer incarnations: the previous
+    # incarnation's stale accept is refused at a3, its stale release matches
+    # nothing, and p2's prepare finds p1's live lease, so p2 never sends an
+    # accept request.
+    import pytest
+
+    from paxoslease.counterexamples import _release_across_proposer_restart_schedule
+    from paxoslease.simulator import Simulator
+
+    sim = Simulator(proposer_duration=2, acceptor_duration=2, quarantine=2)
+    with pytest.raises(AssertionError, match="no queued accept"):
+        _release_across_proposer_restart_schedule(sim)
+    assert sim.active_owners() == {"p1"}

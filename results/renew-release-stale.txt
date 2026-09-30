@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 80 and seed -2472917288882373986 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 2280718] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 75 and seed -5997780800266287693 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 9752] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/mtrencseni/paxoslease/tla/spec/PaxosLeaseChecked.tla
 Parsing file /home/mtrencseni/paxoslease/tla/spec/PaxosLease.tla
 Parsing file /tmp/Naturals.tla
@@ -10,16 +10,16 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module PaxosLease
 Semantic processing of module PaxosLeaseChecked
-Starting... (2026-09-12 17:30:50)
+Starting... (2026-09-28 13:30:30)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-09-12 17:30:50.
-Progress(29) at 2026-09-12 17:30:53: 537,104 states generated (537,104 s/min), 170,766 distinct states found (170,766 ds/min), 12,138 states left on queue.
+Finished computing initial states: 1 distinct state generated at 2026-09-28 13:30:30.
+Progress(28) at 2026-09-28 13:30:33: 468,834 states generated (468,834 s/min), 151,473 distinct states found (151,473 ds/min), 14,395 states left on queue.
 Model checking completed. No error has been found.
   Estimates of the probability that TLC did not check all reachable states
   because two distinct states had the same fingerprint:
   calculated (optimistic):  val = 5.2E-9
-  based on the actual fingerprints:  val = 4.5E-10
+  based on the actual fingerprints:  val = 2.0E-9
 675110 states generated, 204050 distinct states found, 0 states left on queue.
 The depth of the complete state graph search is 39.
 The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 5 and the 95th percentile is 3).
-Finished in 03s at (2026-09-12 17:30:53)
+Finished in 04s at (2026-09-28 13:30:34)

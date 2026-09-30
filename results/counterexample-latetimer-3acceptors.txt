@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 25 and seed -8673212043191032228 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 3403132] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 79 and seed 7317205959326642588 with 8 workers on 8 cores with 36409MB heap and 64MB offheap memory [pid: 1452989] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/mtrencseni/paxoslease/tla/counterexamples/LateTimerSym.tla
 Parsing file /home/mtrencseni/paxoslease/tla/counterexamples/LateTimer.tla
 Parsing file /tmp/TLC.tla
@@ -12,65 +12,96 @@ Semantic processing of module FiniteSets
 Semantic processing of module LateTimer
 Semantic processing of module TLC
 Semantic processing of module LateTimerSym
-Starting... (2026-09-13 00:23:49)
+Starting... (2026-09-30 06:59:38)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-09-13 00:23:49.
-Progress(13) at 2026-09-13 00:23:52: 279,428 states generated (279,428 s/min), 67,293 distinct states found (67,293 ds/min), 36,261 states left on queue.
-Progress(19) at 2026-09-13 00:24:52: 17,622,830 states generated (17,343,402 s/min), 4,122,463 distinct states found (4,055,170 ds/min), 2,126,407 states left on queue.
-Progress(20) at 2026-09-13 00:25:52: 35,722,568 states generated (18,099,738 s/min), 8,256,721 distinct states found (4,134,258 ds/min), 4,202,385 states left on queue.
-Progress(20) at 2026-09-13 00:26:52: 54,072,635 states generated (18,350,067 s/min), 12,433,676 distinct states found (4,176,955 ds/min), 6,282,146 states left on queue.
-Progress(21) at 2026-09-13 00:27:52: 72,740,744 states generated (18,668,109 s/min), 16,412,513 distinct states found (3,978,837 ds/min), 8,091,980 states left on queue.
-Progress(21) at 2026-09-13 00:28:52: 91,312,499 states generated (18,571,755 s/min), 20,442,171 distinct states found (4,029,658 ds/min), 9,983,941 states left on queue.
-Progress(21) at 2026-09-13 00:29:52: 110,195,343 states generated (18,882,844 s/min), 24,566,980 distinct states found (4,124,809 ds/min), 11,891,551 states left on queue.
-Progress(22) at 2026-09-13 00:30:52: 129,170,962 states generated (18,975,619 s/min), 28,367,193 distinct states found (3,800,213 ds/min), 13,432,386 states left on queue.
-Progress(22) at 2026-09-13 00:31:52: 147,935,627 states generated (18,764,665 s/min), 32,233,068 distinct states found (3,865,875 ds/min), 15,122,028 states left on queue.
-Progress(22) at 2026-09-13 00:32:52: 166,853,725 states generated (18,918,098 s/min), 36,192,534 distinct states found (3,959,466 ds/min), 16,880,889 states left on queue.
-Progress(22) at 2026-09-13 00:33:52: 185,520,392 states generated (18,666,667 s/min), 40,005,466 distinct states found (3,812,932 ds/min), 18,462,484 states left on queue.
-Progress(22) at 2026-09-13 00:34:52: 204,834,006 states generated (19,313,614 s/min), 44,118,085 distinct states found (4,112,619 ds/min), 20,272,489 states left on queue.
-Progress(22) at 2026-09-13 00:35:52: 224,145,144 states generated (19,311,138 s/min), 47,699,454 distinct states found (3,581,369 ds/min), 21,467,978 states left on queue.
-Progress(23) at 2026-09-13 00:36:52: 243,243,954 states generated (19,098,810 s/min), 51,427,200 distinct states found (3,727,746 ds/min), 22,909,581 states left on queue.
-Progress(23) at 2026-09-13 00:37:52: 262,466,026 states generated (19,222,072 s/min), 55,111,485 distinct states found (3,684,285 ds/min), 24,303,945 states left on queue.
-Progress(23) at 2026-09-13 00:38:52: 281,301,299 states generated (18,835,273 s/min), 58,941,395 distinct states found (3,829,910 ds/min), 25,950,027 states left on queue.
-Progress(23) at 2026-09-13 00:39:52: 300,408,095 states generated (19,106,796 s/min), 62,983,667 distinct states found (4,042,272 ds/min), 27,736,174 states left on queue.
-Progress(23) at 2026-09-13 00:40:52: 319,827,718 states generated (19,419,623 s/min), 66,505,225 distinct states found (3,521,558 ds/min), 28,887,952 states left on queue.
-Progress(23) at 2026-09-13 00:41:52: 338,669,519 states generated (18,841,801 s/min), 70,222,095 distinct states found (3,716,870 ds/min), 30,325,786 states left on queue.
-Progress(23) at 2026-09-13 00:42:52: 358,549,807 states generated (19,880,288 s/min), 74,218,555 distinct states found (3,996,460 ds/min), 31,905,649 states left on queue.
-Progress(23) at 2026-09-13 00:43:52: 377,841,087 states generated (19,291,280 s/min), 77,940,333 distinct states found (3,721,778 ds/min), 33,238,564 states left on queue.
-Progress(23) at 2026-09-13 00:44:52: 397,375,765 states generated (19,534,678 s/min), 81,294,837 distinct states found (3,354,504 ds/min), 34,113,243 states left on queue.
-Progress(23) at 2026-09-13 00:45:52: 416,995,278 states generated (19,619,513 s/min), 84,653,021 distinct states found (3,358,184 ds/min), 35,027,614 states left on queue.
-Progress(24) at 2026-09-13 00:46:52: 436,029,579 states generated (19,034,301 s/min), 88,548,624 distinct states found (3,895,603 ds/min), 36,689,294 states left on queue.
-Progress(24) at 2026-09-13 00:47:52: 455,548,045 states generated (19,518,466 s/min), 91,984,231 distinct states found (3,435,607 ds/min), 37,769,249 states left on queue.
-Progress(24) at 2026-09-13 00:48:52: 474,591,424 states generated (19,043,379 s/min), 95,493,482 distinct states found (3,509,251 ds/min), 38,962,606 states left on queue.
-Progress(24) at 2026-09-13 00:49:52: 493,633,497 states generated (19,042,073 s/min), 99,326,866 distinct states found (3,833,384 ds/min), 40,572,147 states left on queue.
-Progress(24) at 2026-09-13 00:50:52: 512,702,189 states generated (19,068,692 s/min), 103,333,444 distinct states found (4,006,578 ds/min), 42,308,098 states left on queue.
-Progress(24) at 2026-09-13 00:51:52: 532,028,169 states generated (19,325,980 s/min), 106,980,906 distinct states found (3,647,462 ds/min), 43,628,505 states left on queue.
-Progress(24) at 2026-09-13 00:52:52: 552,006,250 states generated (19,978,081 s/min), 110,413,032 distinct states found (3,432,126 ds/min), 44,575,449 states left on queue.
-Checkpointing of run /home/mtrencseni/paxoslease/build/tlc/26-09-13-00-23-49
-Checkpointing completed at (2026-09-13 00:53:53)
-Progress(24) at 2026-09-13 00:53:53: 571,290,220 states generated (19,283,970 s/min), 113,944,747 distinct states found (3,531,715 ds/min), 45,721,840 states left on queue.
-Progress(24) at 2026-09-13 00:54:53: 590,066,215 states generated (18,775,995 s/min), 117,381,058 distinct states found (3,436,311 ds/min), 46,816,741 states left on queue.
-Progress(24) at 2026-09-13 00:55:53: 609,591,221 states generated (19,525,006 s/min), 121,139,906 distinct states found (3,758,848 ds/min), 48,155,981 states left on queue.
-Progress(24) at 2026-09-13 00:56:53: 629,984,406 states generated (20,393,185 s/min), 124,792,640 distinct states found (3,652,734 ds/min), 49,271,794 states left on queue.
-Progress(24) at 2026-09-13 00:57:53: 649,196,254 states generated (19,211,848 s/min), 128,279,953 distinct states found (3,487,313 ds/min), 50,295,630 states left on queue.
-Progress(24) at 2026-09-13 00:58:53: 668,867,697 states generated (19,671,443 s/min), 131,358,766 distinct states found (3,078,813 ds/min), 50,817,632 states left on queue.
-Progress(24) at 2026-09-13 00:59:53: 688,761,447 states generated (19,893,750 s/min), 134,603,771 distinct states found (3,245,005 ds/min), 51,508,480 states left on queue.
-Progress(24) at 2026-09-13 01:00:53: 708,485,664 states generated (19,724,217 s/min), 137,645,113 distinct states found (3,041,342 ds/min), 52,005,102 states left on queue.
-Progress(25) at 2026-09-13 01:01:53: 727,084,190 states generated (18,598,526 s/min), 141,550,356 distinct states found (3,905,243 ds/min), 53,778,629 states left on queue.
-Progress(25) at 2026-09-13 01:02:53: 746,542,700 states generated (19,458,510 s/min), 145,120,723 distinct states found (3,570,367 ds/min), 55,063,367 states left on queue.
-Progress(25) at 2026-09-13 01:03:53: 766,447,721 states generated (19,905,021 s/min), 148,418,220 distinct states found (3,297,497 ds/min), 55,838,721 states left on queue.
-Progress(25) at 2026-09-13 01:04:53: 785,439,420 states generated (18,991,699 s/min), 151,934,029 distinct states found (3,515,809 ds/min), 57,025,533 states left on queue.
-Progress(25) at 2026-09-13 01:05:53: 804,522,086 states generated (19,082,666 s/min), 155,152,301 distinct states found (3,218,272 ds/min), 57,955,828 states left on queue.
+Finished computing initial states: 1 distinct state generated at 2026-09-30 06:59:38.
+Progress(12) at 2026-09-30 06:59:41: 282,544 states generated (282,544 s/min), 72,225 distinct states found (72,225 ds/min), 40,099 states left on queue.
+Progress(18) at 2026-09-30 07:00:41: 16,782,372 states generated (16,499,828 s/min), 4,120,643 distinct states found (4,048,418 ds/min), 2,113,431 states left on queue.
+Progress(19) at 2026-09-30 07:01:41: 33,994,260 states generated (17,211,888 s/min), 8,334,993 distinct states found (4,214,350 ds/min), 4,288,892 states left on queue.
+Progress(20) at 2026-09-30 07:02:41: 51,131,959 states generated (17,137,699 s/min), 12,400,647 distinct states found (4,065,654 ds/min), 6,286,484 states left on queue.
+Progress(20) at 2026-09-30 07:03:41: 68,733,036 states generated (17,601,077 s/min), 16,639,963 distinct states found (4,239,316 ds/min), 8,437,975 states left on queue.
+Progress(20) at 2026-09-30 07:04:41: 86,370,071 states generated (17,637,035 s/min), 20,652,895 distinct states found (4,012,932 ds/min), 10,285,776 states left on queue.
+Progress(21) at 2026-09-30 07:05:41: 103,681,983 states generated (17,311,912 s/min), 24,752,493 distinct states found (4,099,598 ds/min), 12,315,765 states left on queue.
+Progress(21) at 2026-09-30 07:06:41: 121,585,690 states generated (17,903,707 s/min), 28,876,768 distinct states found (4,124,275 ds/min), 14,292,580 states left on queue.
+Progress(21) at 2026-09-30 07:07:41: 139,499,796 states generated (17,914,106 s/min), 33,067,801 distinct states found (4,191,033 ds/min), 16,312,124 states left on queue.
+Progress(21) at 2026-09-30 07:08:41: 157,132,063 states generated (17,632,267 s/min), 36,958,145 distinct states found (3,890,344 ds/min), 18,017,827 states left on queue.
+Progress(21) at 2026-09-30 07:09:41: 174,853,954 states generated (17,721,891 s/min), 40,897,618 distinct states found (3,939,473 ds/min), 19,726,965 states left on queue.
+Progress(22) at 2026-09-30 07:10:41: 192,310,743 states generated (17,456,789 s/min), 44,929,178 distinct states found (4,031,560 ds/min), 21,649,728 states left on queue.
+Progress(22) at 2026-09-30 07:11:41: 210,059,503 states generated (17,748,760 s/min), 48,996,799 distinct states found (4,067,621 ds/min), 23,585,185 states left on queue.
+Progress(22) at 2026-09-30 07:12:41: 227,882,676 states generated (17,823,173 s/min), 52,968,388 distinct states found (3,971,589 ds/min), 25,371,514 states left on queue.
+Progress(22) at 2026-09-30 07:13:41: 246,266,192 states generated (18,383,516 s/min), 57,180,709 distinct states found (4,212,321 ds/min), 27,300,020 states left on queue.
+Progress(22) at 2026-09-30 07:14:41: 264,218,892 states generated (17,952,700 s/min), 61,054,206 distinct states found (3,873,497 ds/min), 28,913,048 states left on queue.
+Progress(22) at 2026-09-30 07:15:41: 282,349,498 states generated (18,130,606 s/min), 65,084,154 distinct states found (4,029,948 ds/min), 30,701,797 states left on queue.
+Progress(22) at 2026-09-30 07:16:41: 300,635,953 states generated (18,286,455 s/min), 68,828,277 distinct states found (3,744,123 ds/min), 32,118,125 states left on queue.
+Progress(22) at 2026-09-30 07:17:41: 317,998,606 states generated (17,362,653 s/min), 72,558,694 distinct states found (3,730,417 ds/min), 33,622,664 states left on queue.
+Progress(22) at 2026-09-30 07:18:41: 335,955,303 states generated (17,956,697 s/min), 76,485,084 distinct states found (3,926,390 ds/min), 35,272,572 states left on queue.
+Progress(23) at 2026-09-30 07:19:41: 353,392,616 states generated (17,437,313 s/min), 80,571,812 distinct states found (4,086,728 ds/min), 37,260,144 states left on queue.
+Progress(23) at 2026-09-30 07:20:41: 371,404,365 states generated (18,011,749 s/min), 84,470,601 distinct states found (3,898,789 ds/min), 38,897,346 states left on queue.
+Progress(23) at 2026-09-30 07:21:41: 389,173,600 states generated (17,769,235 s/min), 88,409,618 distinct states found (3,939,017 ds/min), 40,641,392 states left on queue.
+Progress(23) at 2026-09-30 07:22:41: 407,147,356 states generated (17,973,756 s/min), 92,338,765 distinct states found (3,929,147 ds/min), 42,363,350 states left on queue.
+Progress(23) at 2026-09-30 07:23:41: 425,050,715 states generated (17,903,359 s/min), 96,326,980 distinct states found (3,988,215 ds/min), 44,127,844 states left on queue.
+Progress(23) at 2026-09-30 07:24:41: 443,497,587 states generated (18,446,872 s/min), 100,067,711 distinct states found (3,740,731 ds/min), 45,507,669 states left on queue.
+Progress(23) at 2026-09-30 07:25:41: 462,211,652 states generated (18,714,065 s/min), 104,345,471 distinct states found (4,277,760 ds/min), 47,402,509 states left on queue.
+Progress(23) at 2026-09-30 07:26:41: 480,298,229 states generated (18,086,577 s/min), 108,165,360 distinct states found (3,819,889 ds/min), 48,917,147 states left on queue.
+Progress(23) at 2026-09-30 07:27:41: 498,367,781 states generated (18,069,552 s/min), 111,882,480 distinct states found (3,717,120 ds/min), 50,318,575 states left on queue.
+Progress(23) at 2026-09-30 07:28:41: 516,709,532 states generated (18,341,751 s/min), 115,764,591 distinct states found (3,882,111 ds/min), 51,893,941 states left on queue.
+Checkpointing of run ../../build/tlc5/26-09-30-06-59-37
+Checkpointing completed at (2026-09-30 07:29:41)
+Progress(23) at 2026-09-30 07:29:41: 535,215,547 states generated (18,506,015 s/min), 119,564,398 distinct states found (3,799,807 ds/min), 53,246,173 states left on queue.
+Progress(23) at 2026-09-30 07:30:41: 553,678,367 states generated (18,462,820 s/min), 123,092,526 distinct states found (3,528,128 ds/min), 54,340,725 states left on queue.
+Progress(23) at 2026-09-30 07:31:41: 571,520,390 states generated (17,842,023 s/min), 126,705,699 distinct states found (3,613,173 ds/min), 55,611,972 states left on queue.
+Progress(23) at 2026-09-30 07:32:41: 589,063,386 states generated (17,542,996 s/min), 130,559,866 distinct states found (3,854,167 ds/min), 57,182,540 states left on queue.
+Progress(23) at 2026-09-30 07:33:41: 607,123,612 states generated (18,060,226 s/min), 134,357,121 distinct states found (3,797,255 ds/min), 58,617,487 states left on queue.
+Progress(23) at 2026-09-30 07:34:41: 624,868,140 states generated (17,744,528 s/min), 138,421,914 distinct states found (4,064,793 ds/min), 60,504,436 states left on queue.
+Progress(24) at 2026-09-30 07:35:41: 642,368,871 states generated (17,500,731 s/min), 142,432,263 distinct states found (4,010,349 ds/min), 62,416,385 states left on queue.
+Progress(24) at 2026-09-30 07:36:41: 660,520,140 states generated (18,151,269 s/min), 145,977,745 distinct states found (3,545,482 ds/min), 63,607,165 states left on queue.
+Progress(24) at 2026-09-30 07:37:41: 678,240,553 states generated (17,720,413 s/min), 149,807,748 distinct states found (3,830,003 ds/min), 65,150,142 states left on queue.
+Progress(24) at 2026-09-30 07:38:41: 696,140,457 states generated (17,899,904 s/min), 153,674,323 distinct states found (3,866,575 ds/min), 66,766,273 states left on queue.
+Progress(24) at 2026-09-30 07:39:41: 713,930,127 states generated (17,789,670 s/min), 157,357,948 distinct states found (3,683,625 ds/min), 68,192,387 states left on queue.
+Progress(24) at 2026-09-30 07:40:41: 732,079,168 states generated (18,149,041 s/min), 161,261,539 distinct states found (3,903,591 ds/min), 69,831,816 states left on queue.
+Progress(24) at 2026-09-30 07:41:41: 749,730,015 states generated (17,650,847 s/min), 165,298,424 distinct states found (4,036,885 ds/min), 71,690,560 states left on queue.
+Progress(24) at 2026-09-30 07:42:41: 767,956,413 states generated (18,226,398 s/min), 169,164,693 distinct states found (3,866,269 ds/min), 73,241,129 states left on queue.
+Progress(24) at 2026-09-30 07:43:41: 786,415,684 states generated (18,459,271 s/min), 172,725,512 distinct states found (3,560,819 ds/min), 74,376,756 states left on queue.
+Progress(24) at 2026-09-30 07:44:41: 804,816,214 states generated (18,400,530 s/min), 176,287,527 distinct states found (3,562,015 ds/min), 75,492,214 states left on queue.
+Progress(24) at 2026-09-30 07:45:41: 823,462,629 states generated (18,646,415 s/min), 180,572,378 distinct states found (4,284,851 ds/min), 77,357,625 states left on queue.
+Progress(24) at 2026-09-30 07:46:41: 842,003,213 states generated (18,540,584 s/min), 184,533,521 distinct states found (3,961,143 ds/min), 78,957,505 states left on queue.
+Progress(24) at 2026-09-30 07:47:41: 860,269,534 states generated (18,266,321 s/min), 188,088,549 distinct states found (3,555,028 ds/min), 80,077,617 states left on queue.
+Progress(24) at 2026-09-30 07:48:41: 878,607,799 states generated (18,338,265 s/min), 191,614,145 distinct states found (3,525,596 ds/min), 81,123,541 states left on queue.
+Progress(24) at 2026-09-30 07:49:41: 896,688,648 states generated (18,080,849 s/min), 195,336,278 distinct states found (3,722,133 ds/min), 82,546,311 states left on queue.
+Progress(24) at 2026-09-30 07:50:41: 915,070,361 states generated (18,381,713 s/min), 198,969,459 distinct states found (3,633,181 ds/min), 83,768,296 states left on queue.
+Progress(24) at 2026-09-30 07:51:41: 932,528,948 states generated (17,458,587 s/min), 202,579,585 distinct states found (3,610,126 ds/min), 85,048,818 states left on queue.
+Progress(24) at 2026-09-30 07:52:41: 951,231,672 states generated (18,702,724 s/min), 206,074,651 distinct states found (3,495,066 ds/min), 85,966,955 states left on queue.
+Progress(24) at 2026-09-30 07:53:41: 969,871,647 states generated (18,639,975 s/min), 209,398,998 distinct states found (3,324,347 ds/min), 86,742,174 states left on queue.
+Progress(24) at 2026-09-30 07:54:41: 987,904,027 states generated (18,032,380 s/min), 213,070,059 distinct states found (3,671,061 ds/min), 88,006,437 states left on queue.
+Progress(24) at 2026-09-30 07:55:41: 1,006,059,774 states generated (18,155,747 s/min), 216,565,252 distinct states found (3,495,193 ds/min), 89,105,352 states left on queue.
+Progress(24) at 2026-09-30 07:56:41: 1,023,721,384 states generated (17,661,610 s/min), 220,250,768 distinct states found (3,685,516 ds/min), 90,397,249 states left on queue.
+Progress(24) at 2026-09-30 07:57:41: 1,042,211,937 states generated (18,490,553 s/min), 224,045,160 distinct states found (3,794,392 ds/min), 91,624,380 states left on queue.
+Progress(24) at 2026-09-30 07:58:42: 1,060,228,436 states generated (18,016,499 s/min), 227,683,801 distinct states found (3,638,641 ds/min), 92,948,926 states left on queue.
+Checkpointing of run ../../build/tlc5/26-09-30-06-59-37
+Checkpointing completed at (2026-09-30 07:59:42)
+Progress(24) at 2026-09-30 07:59:42: 1,078,450,925 states generated (18,222,489 s/min), 231,622,265 distinct states found (3,938,464 ds/min), 94,565,566 states left on queue.
+Progress(25) at 2026-09-30 08:00:42: 1,095,646,385 states generated (17,195,460 s/min), 235,635,837 distinct states found (4,013,572 ds/min), 96,500,361 states left on queue.
+Progress(25) at 2026-09-30 08:01:42: 1,113,356,231 states generated (17,709,846 s/min), 239,524,188 distinct states found (3,888,351 ds/min), 98,204,656 states left on queue.
+Progress(25) at 2026-09-30 08:02:42: 1,131,470,719 states generated (18,114,488 s/min), 243,241,537 distinct states found (3,717,349 ds/min), 99,642,148 states left on queue.
+Progress(25) at 2026-09-30 08:03:42: 1,149,926,065 states generated (18,455,346 s/min), 246,754,417 distinct states found (3,512,880 ds/min), 100,682,668 states left on queue.
+Progress(25) at 2026-09-30 08:04:42: 1,167,494,347 states generated (17,568,282 s/min), 250,459,335 distinct states found (3,704,918 ds/min), 102,074,504 states left on queue.
+Progress(25) at 2026-09-30 08:05:42: 1,185,973,401 states generated (18,479,054 s/min), 254,159,706 distinct states found (3,700,371 ds/min), 103,294,861 states left on queue.
+Progress(25) at 2026-09-30 08:06:42: 1,203,916,013 states generated (17,942,612 s/min), 257,826,045 distinct states found (3,666,339 ds/min), 104,640,261 states left on queue.
+Progress(25) at 2026-09-30 08:07:42: 1,221,721,242 states generated (17,805,229 s/min), 261,483,960 distinct states found (3,657,915 ds/min), 105,984,839 states left on queue.
+Progress(25) at 2026-09-30 08:08:42: 1,239,582,392 states generated (17,861,150 s/min), 265,001,299 distinct states found (3,517,339 ds/min), 107,208,543 states left on queue.
+Progress(25) at 2026-09-30 08:09:42: 1,257,909,886 states generated (18,327,494 s/min), 269,176,492 distinct states found (4,175,193 ds/min), 109,156,488 states left on queue.
 Error: Invariant LeaseExclusivity is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
 /\ phase = (p1 :> "idle" @@ p2 :> "idle")
 /\ certDeadline = (p1 :> (a1 :> 0 @@ a2 :> 0 @@ a3 :> 0) @@ p2 :> (a1 :> 0 @@ a2 :> 0 @@ a3 :> 0))
+/\ pInc = (p1 :> 0 @@ p2 :> 0)
 /\ active = {}
 /\ activeBallot = (p1 :> 0 @@ p2 :> 0)
 /\ promised = (a1 :> 0 @@ a2 :> 0 @@ a3 :> 0)
-/\ accepted = ( a1 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
-  a2 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
-  a3 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] )
+/\ accepted = ( a1 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] @@
+  a2 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] @@
+  a3 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] )
 /\ now = 0
 /\ usedBallots = {}
 /\ crashedA = {}
@@ -84,7 +115,7 @@ State 1: <Initial predicate>
 /\ pBallot = (p1 :> 0 @@ p2 :> 0)
 /\ okResp = (p1 :> {} @@ p2 :> {})
 
-State 2: <StartAcquire line 156, col 9 to line 171, col 52 of module LateTimer>
+State 2: <StartAcquire line 172, col 9 to line 187, col 58 of module LateTimer>
 /\ phase = (p1 :> "preparing" @@ p2 :> "idle")
 /\ usedBallots = {1}
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a1],
@@ -92,7 +123,7 @@ State 2: <StartAcquire line 156, col 9 to line 171, col 52 of module LateTimer>
   [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3] }
 /\ pBallot = (p1 :> 1 @@ p2 :> 0)
 
-State 3: <StartAcquire line 156, col 9 to line 171, col 52 of module LateTimer>
+State 3: <StartAcquire line 172, col 9 to line 187, col 58 of module LateTimer>
 /\ phase = (p1 :> "preparing" @@ p2 :> "preparing")
 /\ usedBallots = {1, 2}
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a1],
@@ -103,7 +134,7 @@ State 3: <StartAcquire line 156, col 9 to line 171, col 52 of module LateTimer>
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3] }
 /\ pBallot = (p1 :> 1 @@ p2 :> 2)
 
-State 4: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer>
+State 4: <DeliverPrepare line 190, col 5 to line 209, col 58 of module LateTimer>
 /\ promised = (a1 :> 1 @@ a2 :> 0 @@ a3 :> 0)
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a2],
   [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
@@ -118,7 +149,7 @@ State 4: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 5: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer>
+State 5: <DeliverPrepare line 190, col 5 to line 209, col 58 of module LateTimer>
 /\ promised = (a1 :> 1 @@ a2 :> 1 @@ a3 :> 0)
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
@@ -139,7 +170,7 @@ State 5: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 6: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer>
+State 6: <DeliverPrepare line 190, col 5 to line 209, col 58 of module LateTimer>
 /\ promised = (a1 :> 2 @@ a2 :> 1 @@ a3 :> 0)
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
@@ -166,7 +197,7 @@ State 6: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 7: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer>
+State 7: <DeliverPrepare line 190, col 5 to line 209, col 58 of module LateTimer>
 /\ promised = (a1 :> 2 @@ a2 :> 2 @@ a3 :> 0)
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
@@ -199,7 +230,7 @@ State 7: <DeliverPrepare line 174, col 5 to line 193, col 52 of module LateTimer
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 8: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer>
+State 8: <DeliverPromise line 227, col 5 to line 241, col 48 of module LateTimer>
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
   [ owner |-> NoOwner,
@@ -225,7 +256,7 @@ State 8: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> {a1} @@ p2 :> {})
 
-State 9: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer>
+State 9: <DeliverPromise line 227, col 5 to line 241, col 48 of module LateTimer>
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
   [ owner |-> NoOwner,
@@ -244,7 +275,7 @@ State 9: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {})
 
-State 10: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer>
+State 10: <DeliverPromise line 227, col 5 to line 241, col 48 of module LateTimer>
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
   [ owner |-> NoOwner,
@@ -256,133 +287,244 @@ State 10: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTime
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {a1})
 
-State 11: <DeliverPromise line 211, col 5 to line 225, col 42 of module LateTimer>
+State 11: <DeliverPromise line 227, col 5 to line 241, col 48 of module LateTimer>
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3] }
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {a1, a2})
 
-State 12: <CrashAcceptor line 410, col 9 to line 419, col 42 of module LateTimer>
+State 12: <CrashAcceptor line 445, col 9 to line 454, col 48 of module LateTimer>
 /\ promised = (a1 :> 0 @@ a2 :> 2 @@ a3 :> 0)
 /\ crashedA = {a1}
 
-State 13: <RestartAcceptor line 422, col 5 to line 430, col 35 of module LateTimer>
+State 13: <RestartAcceptor line 457, col 5 to line 465, col 41 of module LateTimer>
 /\ crashedA = {}
 /\ quarantineUntil = (a1 :> 2 @@ a2 :> 0 @@ a3 :> 0)
 
-State 14: <Tick line 377, col 5 to line 383, col 78 of module LateTimer>
+State 14: <Tick line 403, col 5 to line 409, col 84 of module LateTimer>
 /\ now = 1
 
-State 15: <SendAccept line 229, col 9 to line 240, col 76 of module LateTimer>
+State 15: <SendAccept line 245, col 9 to line 257, col 82 of module LateTimer>
 /\ phase = (p1 :> "accepting" @@ p2 :> "preparing")
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a3] }
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a1 ],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a3 ] }
 /\ pendingDeadline = (p1 :> 3 @@ p2 :> 0)
 
-State 16: <DeliverAcceptReq line 253, col 5 to line 282, col 42 of module LateTimer>
+State 16: <DeliverAcceptReq line 279, col 5 to line 308, col 48 of module LateTimer>
 /\ promised = (a1 :> 0 @@ a2 :> 2 @@ a3 :> 1)
-/\ accepted = ( a1 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
-  a2 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
-  a3 :> [owner |-> p1, ballot |-> 1, deadline |-> 3] )
+/\ accepted = ( a1 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] @@
+  a2 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] @@
+  a3 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 3] )
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
-  [ballot |-> 1, deadline |-> 3, kind |-> "Accepted", from |-> a3, to |-> p1] }
+  [ballot |-> 1, deadline |-> 3, kind |-> "Accepted", from |-> a3, to |-> p1],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a1 ],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ] }
 
-State 17: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTimer>
+State 17: <DeliverAccepted line 311, col 5 to line 341, col 48 of module LateTimer>
 /\ certDeadline = (p1 :> (a1 :> 0 @@ a2 :> 0 @@ a3 :> 3) @@ p2 :> (a1 :> 0 @@ a2 :> 0 @@ a3 :> 0))
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2] }
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a1 ],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ] }
 /\ acceptResp = (p1 :> {a3} @@ p2 :> {})
 
-State 18: <Tick line 377, col 5 to line 383, col 78 of module LateTimer>
+State 18: <Tick line 403, col 5 to line 409, col 84 of module LateTimer>
 /\ now = 2
 
-State 19: <DeliverAcceptReq line 253, col 5 to line 282, col 42 of module LateTimer>
+State 19: <DeliverAcceptReq line 279, col 5 to line 308, col 48 of module LateTimer>
 /\ promised = (a1 :> 1 @@ a2 :> 2 @@ a3 :> 1)
-/\ accepted = ( a1 :> [owner |-> p1, ballot |-> 1, deadline |-> 4] @@
-  a2 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
-  a3 :> [owner |-> p1, ballot |-> 1, deadline |-> 3] )
+/\ accepted = ( a1 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 4] @@
+  a2 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] @@
+  a3 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 3] )
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
-  [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p1] }
+  [ballot |-> 1, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p1],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ] }
 
-State 20: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTimer>
+State 20: <DeliverAccepted line 311, col 5 to line 341, col 48 of module LateTimer>
 /\ phase = (p1 :> "idle" @@ p2 :> "preparing")
 /\ certDeadline = (p1 :> (a1 :> 4 @@ a2 :> 0 @@ a3 :> 3) @@ p2 :> (a1 :> 0 @@ a2 :> 0 @@ a3 :> 0))
 /\ active = {p1}
 /\ activeBallot = (p1 :> 1 @@ p2 :> 0)
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2] }
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ] }
 /\ cert = (p1 :> {a1, a3} @@ p2 :> {})
 /\ pDeadline = (p1 :> 3 @@ p2 :> 0)
 /\ acceptResp = (p1 :> {a1, a3} @@ p2 :> {})
 
-State 21: <SendAccept line 229, col 9 to line 240, col 76 of module LateTimer>
+State 21: <SendAccept line 245, col 9 to line 257, col 82 of module LateTimer>
 /\ phase = (p1 :> "idle" @@ p2 :> "accepting")
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a1],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a3] }
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a1 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a3 ] }
 /\ pendingDeadline = (p1 :> 3 @@ p2 :> 4)
 
-State 22: <DeliverAcceptReq line 253, col 5 to line 282, col 42 of module LateTimer>
+State 22: <DeliverAcceptReq line 279, col 5 to line 308, col 48 of module LateTimer>
 /\ promised = (a1 :> 2 @@ a2 :> 2 @@ a3 :> 1)
-/\ accepted = ( a1 :> [owner |-> p2, ballot |-> 2, deadline |-> 4] @@
-  a2 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
-  a3 :> [owner |-> p1, ballot |-> 1, deadline |-> 3] )
+/\ accepted = ( a1 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 4] @@
+  a2 :> [owner |-> NoOwner, inc |-> 0, ballot |-> 0, deadline |-> 0] @@
+  a3 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 3] )
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a3],
-  [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p2] }
-
-State 23: <DeliverAcceptReq line 253, col 5 to line 282, col 42 of module LateTimer>
-/\ accepted = ( a1 :> [owner |-> p2, ballot |-> 2, deadline |-> 4] @@
-  a2 :> [owner |-> p2, ballot |-> 2, deadline |-> 4] @@
-  a3 :> [owner |-> p1, ballot |-> 1, deadline |-> 3] )
-/\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
-  [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a3],
   [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p2],
-  [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p2] }
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a3 ] }
 
-State 24: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTimer>
+State 23: <DeliverAcceptReq line 279, col 5 to line 308, col 48 of module LateTimer>
+/\ accepted = ( a1 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 4] @@
+  a2 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 4] @@
+  a3 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 3] )
+/\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
+  [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
+  [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a1, to |-> p2],
+  [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p2],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a3 ] }
+
+State 24: <DeliverAccepted line 311, col 5 to line 341, col 48 of module LateTimer>
 /\ certDeadline = (p1 :> (a1 :> 4 @@ a2 :> 0 @@ a3 :> 3) @@ p2 :> (a1 :> 4 @@ a2 :> 0 @@ a3 :> 0))
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a3],
-  [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p2] }
+  [ballot |-> 2, deadline |-> 4, kind |-> "Accepted", from |-> a2, to |-> p2],
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a3 ] }
 /\ acceptResp = (p1 :> {a1, a3} @@ p2 :> {a1})
 
-State 25: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTimer>
+State 25: <DeliverAccepted line 311, col 5 to line 341, col 48 of module LateTimer>
 /\ phase = (p1 :> "idle" @@ p2 :> "idle")
 /\ certDeadline = (p1 :> (a1 :> 4 @@ a2 :> 0 @@ a3 :> 3) @@ p2 :> (a1 :> 4 @@ a2 :> 4 @@ a3 :> 0))
+/\ pInc = (p1 :> 0 @@ p2 :> 0)
 /\ active = {p1, p2}
 /\ activeBallot = (p1 :> 1 @@ p2 :> 2)
 /\ promised = (a1 :> 2 @@ a2 :> 2 @@ a3 :> 1)
-/\ accepted = ( a1 :> [owner |-> p2, ballot |-> 2, deadline |-> 4] @@
-  a2 :> [owner |-> p2, ballot |-> 2, deadline |-> 4] @@
-  a3 :> [owner |-> p1, ballot |-> 1, deadline |-> 3] )
+/\ accepted = ( a1 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 4] @@
+  a2 :> [owner |-> p2, inc |-> 0, ballot |-> 2, deadline |-> 4] @@
+  a3 :> [owner |-> p1, inc |-> 0, ballot |-> 1, deadline |-> 3] )
 /\ now = 2
 /\ usedBallots = {1, 2}
 /\ crashedA = {}
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a3],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a3],
-  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a3] }
+  [ owner |-> p1,
+    inc |-> 0,
+    ballot |-> 1,
+    kind |-> "AcceptReq",
+    from |-> p1,
+    to |-> a2 ],
+  [ owner |-> p2,
+    inc |-> 0,
+    ballot |-> 2,
+    kind |-> "AcceptReq",
+    from |-> p2,
+    to |-> a3 ] }
 /\ pendingDeadline = (p1 :> 3 @@ p2 :> 4)
 /\ crashedP = {}
 /\ cert = (p1 :> {a1, a3} @@ p2 :> {a1, a2})
@@ -392,7 +534,7 @@ State 25: <DeliverAccepted line 285, col 5 to line 315, col 42 of module LateTim
 /\ pBallot = (p1 :> 1 @@ p2 :> 2)
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {a1, a2})
 
-821477767 states generated, 158790920 distinct states found, 59602592 states left on queue.
+1259589657 states generated, 269527373 distinct states found, 109291742 states left on queue.
 The depth of the complete state graph search is 25.
 The average outdegree of the complete state graph is 2 (minimum is 0, the maximum 12 and the 95th percentile is 4).
-Finished in 42min 57s at (2026-09-13 01:06:46)
+Finished in 01h 10min at (2026-09-30 08:09:50)

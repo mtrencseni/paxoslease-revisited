@@ -22,7 +22,9 @@ PAPER_PDF := $(PAPER_DIR)/PaxosLease-Revisited.pdf
 # successful run, and the ones left by violating runs stay inside build/.
 TLC := tlc -cleanup -workers $(TLC_WORKERS) -difftrace -metadir $(TLC_META)
 
-.PHONY: all venv paper-source pdf parse lint check check-standalone check-composition paper-evidence paper-evidence-full paper-claims quick check-impl check-impl-colocated check-retry check-retry-mn5 check-renew-retry check-redeliver-crash counterexamples counterexamples-3acceptors counterexamples-staleowner transport-refinement staleowner-tcp staleowner-a2 interaction-configs impl-colocated-tcp impl-staleowner variant-check expected-counterexamples trace-smoke-test timing-examples unsafe-configs prove test demo monte-carlo results clean
+PHONY_EXTRA := nodeowner-base latetimer-a2 check-release-crash2 check-renew-crash3 check-release-crash3
+.PHONY: $(PHONY_EXTRA)
+.PHONY: all venv paper-source pdf parse lint check check-standalone check-composition paper-evidence paper-evidence-full paper-claims quick check-impl check-impl-colocated check-retry check-retry-mn5 check-renew-retry check-redeliver-crash counterexamples counterexamples-3acceptors counterexamples-staleowner counterexamples-releasecrash releasecrash-a2 counterexamples-renewcrash renewcrash-a2 transport-refinement staleowner-tcp staleowner-a2 interaction-configs impl-colocated-tcp impl-staleowner variant-check expected-counterexamples trace-smoke-test timing-examples unsafe-configs prove test demo monte-carlo results clean
 
 all: parse variant-check check counterexamples prove test monte-carlo expected-counterexamples trace-smoke-test timing-examples unsafe-configs pdf
 
@@ -51,18 +53,26 @@ parse:
 	cd tla/counterexamples && sany OwnerOnlyRelease.tla
 	cd tla/counterexamples && sany ScalarQuorumCounting.tla
 	cd tla/counterexamples && sany StaleOwnerOpen.tla
+	cd tla/counterexamples && sany NodeOwner.tla
+	cd tla/counterexamples && sany NodeOwnerSearch.tla
+	cd tla/spec && sany NodeOwnerSearchBase.tla
+	cd tla/spec && sany PaxosLeaseRenewCrashSearch.tla
+	cd tla/spec && sany PaxosLeaseReleaseCrashSearch.tla
+	cd tla/spec && sany PaxosLeaseSym.tla
+	cd tla/spec && sany PaxosLeaseCheckedSym.tla
 	cd tla/proof && sany PaxosLeaseProof.tla
 
 check: check-standalone check-composition
 
 check-standalone:
-	cd tla/spec && $(TLC) -config PaxosLeaseBase.cfg PaxosLeaseChecked.tla
-	cd tla/spec && $(TLC) -config PaxosLeaseRenewRelease.cfg PaxosLeaseChecked.tla
-	cd tla/spec && $(TLC) -config PaxosLeaseCrashRestart.cfg PaxosLeaseChecked.tla
-	cd tla/spec && $(TLC) -config PaxosLeaseDrift.cfg PaxosLeaseChecked.tla
-	cd tla/spec && $(TLC) -config PaxosLeaseQuarantineEqualsProposer.cfg PaxosLeaseChecked.tla
-	cd tla/spec && $(TLC) -config PaxosLeaseQuarantineEqualsProposer23.cfg PaxosLeaseChecked.tla
-	cd tla/spec && $(TLC) -config PaxosLeaseRedeliver.cfg PaxosLeaseChecked.tla
+	cd tla/spec && ($(TLC) -config PaxosLeaseBase.cfg PaxosLeaseChecked.tla || true) > ../../results/check-base.txt 2>&1 && grep -q "No error has been found" ../../results/check-base.txt
+	cd tla/spec && ($(TLC) -config PaxosLeaseRenewRelease.cfg PaxosLeaseChecked.tla || true) > ../../results/check-renew-release.txt 2>&1 && grep -q "No error has been found" ../../results/check-renew-release.txt
+	cd tla/spec && ($(TLC) -config PaxosLeaseCrashRestart.cfg PaxosLeaseChecked.tla || true) > ../../results/check-crash-restart.txt 2>&1 && grep -q "No error has been found" ../../results/check-crash-restart.txt
+	cd tla/spec && ($(TLC) -config PaxosLeaseDrift.cfg PaxosLeaseChecked.tla || true) > ../../results/check-drift.txt 2>&1 && grep -q "No error has been found" ../../results/check-drift.txt
+	cd tla/spec && ($(TLC) -config PaxosLeaseQuarantineEqualsProposer.cfg PaxosLeaseChecked.tla || true) > ../../results/check-qep.txt 2>&1 && grep -q "No error has been found" ../../results/check-qep.txt
+	cd tla/spec && ($(TLC) -config PaxosLeaseQuarantineEqualsProposer23.cfg PaxosLeaseChecked.tla || true) > ../../results/check-qep23.txt 2>&1 && grep -q "No error has been found" ../../results/check-qep23.txt
+	cd tla/spec && ($(TLC) -config PaxosLeaseRedeliver.cfg PaxosLeaseChecked.tla || true) > ../../results/check-redeliver.txt 2>&1 && grep -q "No error has been found" ../../results/check-redeliver.txt
+	cd tla/spec && ($(TLC) -config PaxosLeaseReleaseRace.cfg PaxosLeaseChecked.tla || true) > ../../results/release-race.txt 2>&1 && grep -q "No error has been found" ../../results/release-race.txt
 
 # Explicit-retry configuration (AbandonAttempt enabled, three ballots, crash,
 # quarantine boundary).  Exhaustive but very large; recorded evidence like
@@ -79,12 +89,33 @@ check-redeliver-crash:
 	cd tla/spec && ($(TLC) -config PaxosLeaseRedeliverCrash.cfg PaxosLeaseChecked.tla || true) > ../../results/redeliver-crash.txt 2>&1 && grep -q "Model checking completed. No error has been found" ../../results/redeliver-crash.txt
 
 check-composition:
-	cd tla/spec && $(TLC) PaxosLeasePaxos.tla
+	cd tla/spec && ($(TLC) PaxosLeasePaxos.tla || true) > ../../results/composition.txt 2>&1 && grep -q "No error has been found" ../../results/composition.txt
 
 counterexamples:
 	cd tla/counterexamples && ($(TLC) -config LateTimer.cfg LateTimer.tla || true) > ../../results/counterexample-latetimer.txt 2>&1 && grep -q "Invariant LeaseExclusivity is violated" ../../results/counterexample-latetimer.txt
 	cd tla/counterexamples && ($(TLC) -config OwnerOnlyRelease.cfg OwnerOnlyRelease.tla || true) > ../../results/counterexample-owneronlyrelease.txt 2>&1 && grep -q "Invariant LeaseExclusivity is violated" ../../results/counterexample-owneronlyrelease.txt
 	cd tla/counterexamples && ($(TLC) -config ScalarQuorumCounting.cfg ScalarQuorumCounting.tla || true) > ../../results/counterexample-scalarquorumcounting.txt 2>&1 && grep -q "Invariant LeaseExclusivity is violated" ../../results/counterexample-scalarquorumcounting.txt
+	cd tla/counterexamples && ($(TLC) -config NodeOwnerSearch.cfg NodeOwnerSearch.tla || true) > ../../results/counterexample-nodeowner.txt 2>&1 && grep -q "Invariant Safety is violated" ../../results/counterexample-nodeowner.txt
+
+# The directed incarnation search on the specification itself (A2 compares
+# incarnations): exhausts its constrained space with no violation.
+nodeowner-base:
+	cd tla/spec && ($(TLC) -config NodeOwnerSearchBase.cfg NodeOwnerSearchBase.tla || true) > ../../results/nodeowner-base.txt 2>&1 && grep -q "Model checking completed. No error has been found" ../../results/nodeowner-base.txt
+
+# The late timer with A2's refusal: unsafe only with overwriting acceptors.
+latetimer-a2:
+	cd tla/counterexamples && ($(TLC) -config LateTimerA2.cfg LateTimer.tla || true) > ../../results/latetimer-a2.txt 2>&1 && grep -q "Model checking completed. No error has been found" ../../results/latetimer-a2.txt
+
+# Release and renewal with two proposers across crashes, with A2's rule.
+# Multi-hour recorded runs; the three-acceptor forms use symmetry reduction.
+check-release-crash2:
+	cd tla/spec && ($(TLC) -config PaxosLeaseReleaseCrash2.cfg PaxosLeaseChecked.tla || true) > ../../results/release-crash2.txt 2>&1 && grep -q "Model checking completed. No error has been found" ../../results/release-crash2.txt
+
+check-renew-crash3:
+	cd tla/spec && ($(TLC) -config PaxosLeaseRenewCrash3.cfg PaxosLeaseCheckedSym.tla || true) > ../../results/renew-crash3.txt 2>&1 && grep -q "Model checking completed. No error has been found" ../../results/renew-crash3.txt
+
+check-release-crash3:
+	cd tla/spec && ($(TLC) -config PaxosLeaseReleaseCrash.cfg PaxosLeaseCheckedSym.tla || true) > ../../results/release-crash3.txt 2>&1 && grep -q "Model checking completed. No error has been found" ../../results/release-crash3.txt
 
 variant-check:
 	$(PYTHON) python/scripts/generate_variants.py --check
@@ -97,15 +128,15 @@ lint:
 	$(PYTHON) -m ruff check
 	$(PYTHON) -m mypy
 
-# Fail-fast evidence target: every result the paper cites except the three
+# Fail-fast evidence target: every result the paper cites except the
 # multi-hour searches, whose recorded outputs under results/ are instead
-# validated by `paper-claims` (trace lengths and distinct-state counts must
+# checked by `paper-claims` (trace lengths and distinct-state counts must
 # match what the paper cites).  Any expected pass that fails or expected
 # counterexample that is not found aborts with a nonzero exit.
 # `paper-evidence-full` additionally re-runs the multi-hour searches.
 paper-evidence: parse lint variant-check check check-impl counterexamples unsafe-configs prove test expected-counterexamples trace-smoke-test timing-examples paper-claims
 
-paper-evidence-full: paper-evidence transport-refinement interaction-configs check-retry check-retry-mn5 check-renew-retry check-redeliver-crash counterexamples-staleowner staleowner-tcp staleowner-a2 counterexamples-3acceptors check-impl-colocated impl-colocated-tcp impl-staleowner
+paper-evidence-full: paper-evidence nodeowner-base latetimer-a2 check-release-crash2 check-renew-crash3 check-release-crash3 transport-refinement interaction-configs check-retry check-retry-mn5 check-renew-retry check-redeliver-crash counterexamples-staleowner counterexamples-releasecrash releasecrash-a2 counterexamples-renewcrash renewcrash-a2 staleowner-tcp staleowner-a2 counterexamples-3acceptors check-impl-colocated impl-colocated-tcp impl-staleowner
 	$(PYTHON) python/scripts/check_paper_claims.py
 
 # Cross-check the paper's cited numbers (trace lengths, exhaustive state
@@ -124,9 +155,9 @@ quick: parse lint variant-check test expected-counterexamples
 # colocation-valid three-acceptor violation has its own target below.
 # Long-running; part of `paper-evidence` but not of `all`.
 check-impl:
-	cd tla/spec && $(TLC) -config PaxosLeaseImplTimelyShipped.cfg PaxosLeaseImpl.tla
-	cd tla/spec && $(TLC) -config PaxosLeaseImplTimelyBoundary.cfg PaxosLeaseImpl.tla
-	cd tla/spec && $(TLC) -config PaxosLeaseImplTimelyRDominantSafe.cfg PaxosLeaseImpl.tla
+	cd tla/spec && ($(TLC) -config PaxosLeaseImplTimelyShipped.cfg PaxosLeaseImpl.tla || true) > ../../results/impl-timely-shipped.txt 2>&1 && grep -q "No error has been found" ../../results/impl-timely-shipped.txt
+	cd tla/spec && ($(TLC) -config PaxosLeaseImplTimelyBoundary.cfg PaxosLeaseImpl.tla || true) > ../../results/impl-timely-boundary.txt 2>&1 && grep -q "No error has been found" ../../results/impl-timely-boundary.txt
+	cd tla/spec && ($(TLC) -config PaxosLeaseImplTimelyRDominantSafe.cfg PaxosLeaseImpl.tla || true) > ../../results/impl-timely-rdominant-safe.txt 2>&1 && grep -q "No error has been found" ../../results/impl-timely-rdominant-safe.txt
 	cd tla/spec && ($(TLC) -config PaxosLeaseImplTimelyBelow.cfg PaxosLeaseImpl.tla || true) > ../../results/impl-timely-below.txt 2>&1 && grep -q "Invariant LeaseExclusivity is violated" ../../results/impl-timely-below.txt
 	cd tla/spec && ($(TLC) -config PaxosLeaseImplTimelyRDominant.cfg PaxosLeaseImpl.tla || true) > ../../results/impl-timely-rdominant.txt 2>&1 && grep -q "Invariant LeaseExclusivity is violated" ../../results/impl-timely-rdominant.txt
 	cd tla/spec && ($(TLC) -config PaxosLeaseImplDelayedShipped.cfg PaxosLeaseImpl.tla || true) > ../../results/impl-delayed-shipped.txt 2>&1 && grep -q "Invariant LeaseExclusivity is violated" ../../results/impl-delayed-shipped.txt
@@ -153,6 +184,27 @@ transport-refinement:
 	cd tla/spec && ($(TLC) -config PaxosLeaseImplDelayedShippedTcp.cfg PaxosLeaseImpl.tla || true) > ../../results/impl-delayed-shipped-tcp.txt 2>&1 && grep -q "Invariant LeaseExclusivity is violated" ../../results/impl-delayed-shipped-tcp.txt
 
 # The multi-hour transport and repair experiments, recorded evidence.
+# Early release across an acceptor restart: a directed search (its state
+# constraint only prunes behaviours) that finds a 40-state two-owner trace on
+# the specification with overwriting acceptors (RefuseLiveOverwrite = FALSE).
+# About 50 minutes on 8 workers.
+counterexamples-releasecrash:
+	cd tla/spec && ($(TLC) -config PaxosLeaseReleaseCrashSearch.cfg PaxosLeaseReleaseCrashSearch.tla || true) > ../../results/counterexample-releasecrash.txt 2>&1 && grep -q "Invariant Safety is violated" ../../results/counterexample-releasecrash.txt
+
+releasecrash-a2:
+	cd tla/spec && ($(TLC) -config PaxosLeaseReleaseCrashSearchA2.cfg PaxosLeaseReleaseCrashSearch.tla || true) > ../../results/releasecrash-a2.txt 2>&1 && grep -q "Model checking completed. No error has been found" ../../results/releasecrash-a2.txt
+
+# Renewal with one acceptor restart and three acceptors, qualifier in force:
+# a directed search (its state constraint only prunes behaviours) that finds a
+# 39-state two-owner trace with overwriting acceptors, and the same
+# search with A2's acceptor-side rule, which exhausts the space with no error.
+# About 7 minutes each on 8 workers.
+counterexamples-renewcrash:
+	cd tla/spec && ($(TLC) -config PaxosLeaseRenewCrashSearch.cfg PaxosLeaseRenewCrashSearch.tla || true) > ../../results/counterexample-renewcrash.txt 2>&1 && grep -q "Invariant Safety is violated" ../../results/counterexample-renewcrash.txt
+
+renewcrash-a2:
+	cd tla/spec && ($(TLC) -config PaxosLeaseRenewCrashSearchA2.cfg PaxosLeaseRenewCrashSearch.tla || true) > ../../results/renewcrash-a2.txt 2>&1 && grep -q "Model checking completed. No error has been found" ../../results/renewcrash-a2.txt
+
 staleowner-tcp:
 	cd tla/counterexamples && ($(TLC) -config StaleOwnerOpenTcp.cfg StaleOwnerOpen.tla || true) > ../../results/staleowner-tcp.txt 2>&1 && grep -q "Invariant LeaseExclusivity is violated" ../../results/staleowner-tcp.txt
 
