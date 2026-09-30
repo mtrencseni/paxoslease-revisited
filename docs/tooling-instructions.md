@@ -148,7 +148,7 @@ The system `make` supplied through Apple command-line tools is sufficient for a 
 
 ```bash
 sudo apt update
-sudo apt install openjdk-17-jdk python3-venv git make curl unzip
+sudo apt install openjdk-21-jdk python3-venv git make curl unzip
 ```
 
 Verify:
