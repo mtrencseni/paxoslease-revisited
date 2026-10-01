@@ -83,11 +83,15 @@ class LeasedPaxosCluster:
         return proposer in self.lease.active_owners()
 
     def acquire_lease(self, proposer: str) -> bool:
+        # A successful renewal keeps ownership continuous, so the leadership
+        # epoch, its recovery and its reserved ballot carry over (M1).
+        renewing = self.lease_active(proposer)
         self.lease.start_acquire(proposer)
         while self.lease.queue:
             self.lease.deliver(0)
         if self.lease_active(proposer):
-            self.state[proposer] = "elected"
+            if not renewing:
+                self.state[proposer] = "elected"
             self.check_safety()
             return True
         self.check_safety()

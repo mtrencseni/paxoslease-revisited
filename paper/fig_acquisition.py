@@ -2,7 +2,8 @@
 
 Adapted from the companion relativity note's Figure 2.  Regenerate with: cd paper && python3 fig_acquisition.py
 """
-import matplotlib; matplotlib.use('Agg')
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 plt.rcParams.update({'font.size':7,'font.family':'serif',
                      'font.serif':['STIXGeneral','DejaVu Serif'],
@@ -26,9 +27,12 @@ def axis_arrow(ax,p0,p1,color):
 fig,ax=plt.subplots(figsize=(3.35,2.25))
 P,A=0.0,(1.60,2.40,3.20)
 TOP=3.85
-ax.set_xlim(-1.62,4.85); ax.set_ylim(-0.10,TOP+0.55)
-ax.set_xticks([]); ax.set_yticks([])
-for sp in ('top','right','left','bottom'): ax.spines[sp].set_visible(False)
+ax.set_xlim(-1.62,4.85)
+ax.set_ylim(-0.10,TOP+0.55)
+ax.set_xticks([])
+ax.set_yticks([])
+for sp in ('top','right','left','bottom'):
+    ax.spines[sp].set_visible(False)
 axis_arrow(ax,(-1.26,0.0),(-1.26,TOP+0.40),'black')
 ax.text(-1.52,TOP*0.55,'time',color='black',fontsize=FS_AXIS,rotation=90,va='center')
 for x,lab,c in [(P,'proposer',C_OLD)]+[(A[i],'acceptor %d'%(i+1),C_ARR) for i in range(3)]:
@@ -69,4 +73,5 @@ ax.axhspan(2.45,3.55,xmin=0.05,xmax=0.79,color='black',alpha=0.08,lw=0,zorder=0)
 ax.text(1.35,3.00,"the proposer's lease timer has expired, but\nthe acceptors' timers have not, so no other\nproposer can acquire the lease here.",
         color=C_ARR,fontsize=FS_ANNOT,ha='center',va='center',linespacing=1.4,bbox=BOX,zorder=8)
 fig.tight_layout()
-fig.savefig('fig-acquisition.pdf'); plt.close(fig)
+fig.savefig('fig-acquisition.pdf')
+plt.close(fig)

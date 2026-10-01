@@ -24,6 +24,15 @@ def test_client_admission_requires_ready_lease_holder() -> None:
     assert cluster.append("p1", "v1") == (1, "v1")
     assert cluster.chosen_log() == {1: "v1"}
 
+def test_renewal_keeps_ready_leader_in_fast_mode() -> None:
+    cluster = LeasedPaxosCluster(proposer_duration=3, acceptor_duration=3, quarantine=3)
+    make_ready(cluster, "p1")
+    assert cluster.append("p1", "v1") == (1, "v1")
+    cluster.tick(1)
+    assert cluster.acquire_lease("p1")
+    assert cluster.state["p1"] == "ready"
+    assert cluster.append("p1", "v2") == (2, "v2")
+
 def test_lease_expiry_revokes_ready_leader() -> None:
     cluster = LeasedPaxosCluster(proposer_duration=2, acceptor_duration=2, quarantine=2)
     make_ready(cluster, "p1")

@@ -34,7 +34,7 @@ testpaths = ["python/tests"]
 cache_dir = "build/pytest"
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.13"
 cache_dir = "build/mypy"
 files = ["python"]
 strict = true

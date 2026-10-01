@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 106 and seed -27267457854807157 with 8 workers on 8 cores with 14267MB heap and 64MB offheap memory [pid: 809684] (Linux 6.1.0-49-amd64 amd64, Debian 17.0.20.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 5 and seed -466329695887612223 with 4 workers on 32 cores with 10923MB heap and 64MB offheap memory [pid: 25828] (Linux 6.12.111+deb13-amd64 amd64, Debian 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/mtrencseni/paxoslease/tla/spec/PaxosLeaseImpl.tla
 Parsing file /tmp/Naturals.tla
 Parsing file /tmp/FiniteSets.tla
@@ -8,15 +8,23 @@ Semantic processing of module Naturals
 Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module PaxosLeaseImpl
-Starting... (2026-09-13 10:07:28)
+Starting... (2026-09-30 11:34:19)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-09-13 10:07:28.
-Progress(12) at 2026-09-13 10:07:31: 792,660 states generated (792,660 s/min), 243,820 distinct states found (243,820 ds/min), 131,653 states left on queue.
-Progress(19) at 2026-09-13 10:08:31: 43,673,720 states generated (42,881,060 s/min), 10,181,000 distinct states found (9,937,180 ds/min), 3,409,757 states left on queue.
-Progress(21) at 2026-09-13 10:09:31: 87,780,876 states generated (44,107,156 s/min), 19,759,943 distinct states found (9,578,943 ds/min), 5,800,161 states left on queue.
-Progress(22) at 2026-09-13 10:10:31: 132,716,735 states generated (44,935,859 s/min), 28,549,910 distinct states found (8,789,967 ds/min), 7,089,312 states left on queue.
-Progress(23) at 2026-09-13 10:11:31: 179,218,059 states generated (46,501,324 s/min), 36,986,974 distinct states found (8,437,064 ds/min), 7,636,975 states left on queue.
-Progress(24) at 2026-09-13 10:12:31: 226,329,087 states generated (47,111,028 s/min), 44,886,775 distinct states found (7,899,801 ds/min), 7,390,260 states left on queue.
+Finished computing initial states: 1 distinct state generated at 2026-09-30 11:34:19.
+Progress(12) at 2026-09-30 11:34:22: 746,225 states generated (746,225 s/min), 231,501 distinct states found (231,501 ds/min), 126,360 states left on queue.
+Progress(17) at 2026-09-30 11:35:22: 19,867,739 states generated (19,121,514 s/min), 4,766,056 distinct states found (4,534,555 ds/min), 1,765,961 states left on queue.
+Progress(19) at 2026-09-30 11:36:22: 40,410,349 states generated (20,542,610 s/min), 9,408,713 distinct states found (4,642,657 ds/min), 3,174,266 states left on queue.
+Progress(20) at 2026-09-30 11:37:22: 59,927,225 states generated (19,516,876 s/min), 13,787,533 distinct states found (4,378,820 ds/min), 4,418,713 states left on queue.
+Progress(20) at 2026-09-30 11:38:22: 80,545,852 states generated (20,618,627 s/min), 18,245,736 distinct states found (4,458,203 ds/min), 5,495,114 states left on queue.
+Progress(21) at 2026-09-30 11:39:22: 101,456,391 states generated (20,910,539 s/min), 22,516,465 distinct states found (4,270,729 ds/min), 6,327,224 states left on queue.
+Progress(22) at 2026-09-30 11:40:22: 122,756,245 states generated (21,299,854 s/min), 26,773,878 distinct states found (4,257,413 ds/min), 7,034,206 states left on queue.
+Progress(22) at 2026-09-30 11:41:22: 144,533,578 states generated (21,777,333 s/min), 30,764,438 distinct states found (3,990,560 ds/min), 7,324,184 states left on queue.
+Progress(23) at 2026-09-30 11:42:22: 165,791,585 states generated (21,258,007 s/min), 34,635,207 distinct states found (3,870,769 ds/min), 7,587,009 states left on queue.
+Progress(23) at 2026-09-30 11:43:22: 187,623,953 states generated (21,832,368 s/min), 38,375,247 distinct states found (3,740,040 ds/min), 7,571,378 states left on queue.
+Progress(24) at 2026-09-30 11:44:22: 210,005,592 states generated (22,381,639 s/min), 42,142,621 distinct states found (3,767,374 ds/min), 7,479,895 states left on queue.
+Progress(24) at 2026-09-30 11:45:22: 231,626,789 states generated (21,621,197 s/min), 45,662,677 distinct states found (3,520,056 ds/min), 7,236,718 states left on queue.
+Progress(25) at 2026-09-30 11:46:22: 253,626,073 states generated (21,999,284 s/min), 49,156,643 distinct states found (3,493,966 ds/min), 6,888,957 states left on queue.
+Progress(25) at 2026-09-30 11:47:22: 276,065,255 states generated (22,439,182 s/min), 52,835,152 distinct states found (3,678,509 ds/min), 6,629,191 states left on queue.
 Error: Invariant LeaseExclusivity is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -41,7 +49,7 @@ State 1: <Initial predicate>
 /\ pBallot = (p1 :> 0 @@ p2 :> 0)
 /\ okResp = (p1 :> {} @@ p2 :> {})
 
-State 2: <StartAcquire line 168, col 9 to line 184, col 52 of module PaxosLeaseImpl>
+State 2: <StartAcquire line 171, col 9 to line 187, col 52 of module PaxosLeaseImpl>
 /\ phase = (p1 :> "preparing" @@ p2 :> "idle")
 /\ attemptDeadline = (p1 :> 2 @@ p2 :> 0)
 /\ usedBallots = {1}
@@ -49,18 +57,21 @@ State 2: <StartAcquire line 168, col 9 to line 184, col 52 of module PaxosLeaseI
   [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a2] }
 /\ pBallot = (p1 :> 1 @@ p2 :> 0)
 
-State 3: <StartAcquire line 168, col 9 to line 184, col 52 of module PaxosLeaseImpl>
+State 3: <DeliverPrepare line 190, col 5 to line 209, col 52 of module PaxosLeaseImpl>
+/\ promised = (a1 :> 1 @@ a2 :> 0)
+/\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a2],
+  [ owner |-> NoOwner,
+    ballot |-> 1,
+    kind |-> "Promise",
+    from |-> a1,
+    to |-> p1,
+    acceptedBallot |-> 0,
+    acceptedDeadline |-> 0 ] }
+
+State 4: <StartAcquire line 171, col 9 to line 187, col 52 of module PaxosLeaseImpl>
 /\ phase = (p1 :> "preparing" @@ p2 :> "preparing")
 /\ attemptDeadline = (p1 :> 2 @@ p2 :> 2)
 /\ usedBallots = {1, 2}
-/\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a1],
-  [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a2],
-  [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
-  [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2] }
-/\ pBallot = (p1 :> 1 @@ p2 :> 2)
-
-State 4: <DeliverPrepare line 187, col 5 to line 206, col 52 of module PaxosLeaseImpl>
-/\ promised = (a1 :> 1 @@ a2 :> 0)
 /\ network = { [ballot |-> 1, kind |-> "Prepare", from |-> p1, to |-> a2],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
@@ -71,8 +82,9 @@ State 4: <DeliverPrepare line 187, col 5 to line 206, col 52 of module PaxosLeas
     to |-> p1,
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
+/\ pBallot = (p1 :> 1 @@ p2 :> 2)
 
-State 5: <DeliverPrepare line 187, col 5 to line 206, col 52 of module PaxosLeaseImpl>
+State 5: <DeliverPrepare line 190, col 5 to line 209, col 52 of module PaxosLeaseImpl>
 /\ promised = (a1 :> 1 @@ a2 :> 1)
 /\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a1],
   [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
@@ -91,7 +103,7 @@ State 5: <DeliverPrepare line 187, col 5 to line 206, col 52 of module PaxosLeas
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 6: <DeliverPrepare line 187, col 5 to line 206, col 52 of module PaxosLeaseImpl>
+State 6: <DeliverPrepare line 190, col 5 to line 209, col 52 of module PaxosLeaseImpl>
 /\ promised = (a1 :> 2 @@ a2 :> 1)
 /\ network = { [ballot |-> 2, kind |-> "Prepare", from |-> p2, to |-> a2],
   [ owner |-> NoOwner,
@@ -116,7 +128,7 @@ State 6: <DeliverPrepare line 187, col 5 to line 206, col 52 of module PaxosLeas
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 7: <DeliverPrepare line 187, col 5 to line 206, col 52 of module PaxosLeaseImpl>
+State 7: <DeliverPrepare line 190, col 5 to line 209, col 52 of module PaxosLeaseImpl>
 /\ promised = (a1 :> 2 @@ a2 :> 2)
 /\ network = { [ owner |-> NoOwner,
     ballot |-> 1,
@@ -147,7 +159,7 @@ State 7: <DeliverPrepare line 187, col 5 to line 206, col 52 of module PaxosLeas
     acceptedBallot |-> 0,
     acceptedDeadline |-> 0 ] }
 
-State 8: <DeliverPromise line 209, col 5 to line 222, col 42 of module PaxosLeaseImpl>
+State 8: <DeliverPromise line 212, col 5 to line 225, col 42 of module PaxosLeaseImpl>
 /\ network = { [ owner |-> NoOwner,
     ballot |-> 1,
     kind |-> "Promise",
@@ -171,7 +183,7 @@ State 8: <DeliverPromise line 209, col 5 to line 222, col 42 of module PaxosLeas
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> {a1} @@ p2 :> {})
 
-State 9: <DeliverPromise line 209, col 5 to line 222, col 42 of module PaxosLeaseImpl>
+State 9: <DeliverPromise line 212, col 5 to line 225, col 42 of module PaxosLeaseImpl>
 /\ network = { [ owner |-> NoOwner,
     ballot |-> 2,
     kind |-> "Promise",
@@ -188,7 +200,7 @@ State 9: <DeliverPromise line 209, col 5 to line 222, col 42 of module PaxosLeas
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {})
 
-State 10: <DeliverPromise line 209, col 5 to line 222, col 42 of module PaxosLeaseImpl>
+State 10: <DeliverPromise line 212, col 5 to line 225, col 42 of module PaxosLeaseImpl>
 /\ network = { [ owner |-> NoOwner,
     ballot |-> 2,
     kind |-> "Promise",
@@ -198,31 +210,33 @@ State 10: <DeliverPromise line 209, col 5 to line 222, col 42 of module PaxosLea
     acceptedDeadline |-> 0 ] }
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {a1})
 
-State 11: <DeliverPromise line 209, col 5 to line 222, col 42 of module PaxosLeaseImpl>
+State 11: <DeliverPromise line 212, col 5 to line 225, col 42 of module PaxosLeaseImpl>
 /\ network = {}
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {a1, a2})
 
-State 12: <SendAccept line 232, col 9 to line 243, col 76 of module PaxosLeaseImpl>
-/\ phase = (p1 :> "preparing" @@ p2 :> "accepting")
-/\ network = { [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a1],
-  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2] }
-/\ pendingDeadline = (p1 :> 0 @@ p2 :> 2)
+State 12: <SendAccept line 235, col 9 to line 246, col 76 of module PaxosLeaseImpl>
+/\ phase = (p1 :> "accepting" @@ p2 :> "preparing")
+/\ network = { [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
+  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2] }
+/\ pendingDeadline = (p1 :> 2 @@ p2 :> 0)
 
-State 13: <DeliverAcceptReq line 246, col 5 to line 269, col 42 of module PaxosLeaseImpl>
+State 13: <SendAccept line 235, col 9 to line 246, col 76 of module PaxosLeaseImpl>
+/\ phase = (p1 :> "accepting" @@ p2 :> "accepting")
+/\ network = { [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
+  [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
+  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a1],
+  [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2] }
+/\ pendingDeadline = (p1 :> 2 @@ p2 :> 2)
+
+State 14: <DeliverAcceptReq line 249, col 5 to line 272, col 42 of module PaxosLeaseImpl>
 /\ accepted = ( a1 :> [owner |-> p2, ballot |-> 2, deadline |-> 2] @@
   a2 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] )
-/\ network = { [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2],
-  [ballot |-> 2, deadline |-> 2, kind |-> "Accepted", from |-> a1, to |-> p2] }
-
-State 14: <SendAccept line 232, col 9 to line 243, col 76 of module PaxosLeaseImpl>
-/\ phase = (p1 :> "accepting" @@ p2 :> "accepting")
 /\ network = { [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
   [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
   [owner |-> p2, ballot |-> 2, kind |-> "AcceptReq", from |-> p2, to |-> a2],
   [ballot |-> 2, deadline |-> 2, kind |-> "Accepted", from |-> a1, to |-> p2] }
-/\ pendingDeadline = (p1 :> 2 @@ p2 :> 2)
 
-State 15: <DeliverAcceptReq line 246, col 5 to line 269, col 42 of module PaxosLeaseImpl>
+State 15: <DeliverAcceptReq line 249, col 5 to line 272, col 42 of module PaxosLeaseImpl>
 /\ accepted = ( a1 :> [owner |-> p2, ballot |-> 2, deadline |-> 2] @@
   a2 :> [owner |-> p2, ballot |-> 2, deadline |-> 2] )
 /\ network = { [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
@@ -230,14 +244,14 @@ State 15: <DeliverAcceptReq line 246, col 5 to line 269, col 42 of module PaxosL
   [ballot |-> 2, deadline |-> 2, kind |-> "Accepted", from |-> a1, to |-> p2],
   [ballot |-> 2, deadline |-> 2, kind |-> "Accepted", from |-> a2, to |-> p2] }
 
-State 16: <DeliverAccepted line 278, col 5 to line 308, col 42 of module PaxosLeaseImpl>
+State 16: <DeliverAccepted line 281, col 5 to line 311, col 42 of module PaxosLeaseImpl>
 /\ certDeadline = (p1 :> (a1 :> 0 @@ a2 :> 0) @@ p2 :> (a1 :> 2 @@ a2 :> 0))
 /\ network = { [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a1],
   [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
   [ballot |-> 2, deadline |-> 2, kind |-> "Accepted", from |-> a2, to |-> p2] }
 /\ acceptResp = (p1 :> {} @@ p2 :> {a1})
 
-State 17: <DeliverAccepted line 278, col 5 to line 308, col 42 of module PaxosLeaseImpl>
+State 17: <DeliverAccepted line 281, col 5 to line 311, col 42 of module PaxosLeaseImpl>
 /\ phase = (p1 :> "accepting" @@ p2 :> "idle")
 /\ certDeadline = (p1 :> (a1 :> 0 @@ a2 :> 0) @@ p2 :> (a1 :> 2 @@ a2 :> 2))
 /\ active = {p2}
@@ -248,49 +262,49 @@ State 17: <DeliverAccepted line 278, col 5 to line 308, col 42 of module PaxosLe
 /\ pDeadline = (p1 :> 0 @@ p2 :> 2)
 /\ acceptResp = (p1 :> {} @@ p2 :> {a1, a2})
 
-State 18: <CrashAcceptor line 413, col 9 to line 424, col 42 of module PaxosLeaseImpl>
+State 18: <CrashAcceptor line 416, col 9 to line 427, col 42 of module PaxosLeaseImpl>
 /\ promised = (a1 :> 0 @@ a2 :> 2)
 /\ accepted = ( a1 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
   a2 :> [owner |-> p2, ballot |-> 2, deadline |-> 2] )
 /\ crashedA = {a1}
 
-State 19: <CrashAcceptor line 413, col 9 to line 424, col 42 of module PaxosLeaseImpl>
+State 19: <CrashAcceptor line 416, col 9 to line 427, col 42 of module PaxosLeaseImpl>
 /\ promised = (a1 :> 0 @@ a2 :> 0)
 /\ accepted = ( a1 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] @@
   a2 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] )
 /\ crashedA = {a1, a2}
 
-State 20: <RestartAcceptor line 427, col 5 to line 437, col 35 of module PaxosLeaseImpl>
+State 20: <RestartAcceptor line 430, col 5 to line 440, col 35 of module PaxosLeaseImpl>
 /\ crashedA = {a2}
 /\ quarantineUntil = (a1 :> 1 @@ a2 :> 0)
 
-State 21: <RestartAcceptor line 427, col 5 to line 437, col 35 of module PaxosLeaseImpl>
+State 21: <RestartAcceptor line 430, col 5 to line 440, col 35 of module PaxosLeaseImpl>
 /\ crashedA = {}
 /\ quarantineUntil = (a1 :> 1 @@ a2 :> 1)
 
-State 22: <Tick line 354, col 5 to line 366, col 78 of module PaxosLeaseImpl>
+State 22: <Tick line 357, col 5 to line 369, col 78 of module PaxosLeaseImpl>
 /\ now = 1
 
-State 23: <DeliverAcceptReq line 246, col 5 to line 269, col 42 of module PaxosLeaseImpl>
+State 23: <DeliverAcceptReq line 249, col 5 to line 272, col 42 of module PaxosLeaseImpl>
 /\ promised = (a1 :> 1 @@ a2 :> 0)
 /\ accepted = ( a1 :> [owner |-> p1, ballot |-> 1, deadline |-> 3] @@
   a2 :> [owner |-> NoOwner, ballot |-> 0, deadline |-> 0] )
 /\ network = { [owner |-> p1, ballot |-> 1, kind |-> "AcceptReq", from |-> p1, to |-> a2],
   [ballot |-> 1, deadline |-> 3, kind |-> "Accepted", from |-> a1, to |-> p1] }
 
-State 24: <DeliverAcceptReq line 246, col 5 to line 269, col 42 of module PaxosLeaseImpl>
+State 24: <DeliverAcceptReq line 249, col 5 to line 272, col 42 of module PaxosLeaseImpl>
 /\ promised = (a1 :> 1 @@ a2 :> 1)
 /\ accepted = ( a1 :> [owner |-> p1, ballot |-> 1, deadline |-> 3] @@
   a2 :> [owner |-> p1, ballot |-> 1, deadline |-> 3] )
 /\ network = { [ballot |-> 1, deadline |-> 3, kind |-> "Accepted", from |-> a1, to |-> p1],
   [ballot |-> 1, deadline |-> 3, kind |-> "Accepted", from |-> a2, to |-> p1] }
 
-State 25: <DeliverAccepted line 278, col 5 to line 308, col 42 of module PaxosLeaseImpl>
+State 25: <DeliverAccepted line 281, col 5 to line 311, col 42 of module PaxosLeaseImpl>
 /\ certDeadline = (p1 :> (a1 :> 3 @@ a2 :> 0) @@ p2 :> (a1 :> 2 @@ a2 :> 2))
 /\ network = {[ballot |-> 1, deadline |-> 3, kind |-> "Accepted", from |-> a2, to |-> p1]}
 /\ acceptResp = (p1 :> {a1} @@ p2 :> {a1, a2})
 
-State 26: <DeliverAccepted line 278, col 5 to line 308, col 42 of module PaxosLeaseImpl>
+State 26: <DeliverAccepted line 281, col 5 to line 311, col 42 of module PaxosLeaseImpl>
 /\ phase = (p1 :> "idle" @@ p2 :> "idle")
 /\ certDeadline = (p1 :> (a1 :> 3 @@ a2 :> 3) @@ p2 :> (a1 :> 2 @@ a2 :> 2))
 /\ attemptDeadline = (p1 :> 2 @@ p2 :> 2)
@@ -312,7 +326,7 @@ State 26: <DeliverAccepted line 278, col 5 to line 308, col 42 of module PaxosLe
 /\ pBallot = (p1 :> 1 @@ p2 :> 2)
 /\ okResp = (p1 :> {a1, a2} @@ p2 :> {a1, a2})
 
-271702449 states generated, 52109407 distinct states found, 6663259 states left on queue.
+289599957 states generated, 54894323 distinct states found, 6303419 states left on queue.
 The depth of the complete state graph search is 26.
 The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 9 and the 95th percentile is 3).
-Finished in 06min 01s at (2026-09-13 10:13:29)
+Finished in 13min 41s at (2026-09-30 11:48:00)

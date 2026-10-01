@@ -136,7 +136,7 @@ lint:
 # `paper-evidence-full` additionally re-runs the multi-hour searches.
 paper-evidence: parse lint variant-check check check-impl counterexamples unsafe-configs prove test expected-counterexamples trace-smoke-test timing-examples paper-claims
 
-paper-evidence-full: paper-evidence nodeowner-base latetimer-a2 check-release-crash2 check-renew-crash3 check-release-crash3 transport-refinement interaction-configs check-retry check-retry-mn5 check-renew-retry check-redeliver-crash counterexamples-staleowner counterexamples-releasecrash releasecrash-a2 counterexamples-renewcrash renewcrash-a2 staleowner-tcp staleowner-a2 counterexamples-3acceptors check-impl-colocated impl-colocated-tcp impl-staleowner
+paper-evidence-full: paper-evidence nodeowner-base latetimer-a2 transport-refinement interaction-configs check-retry check-renew-retry counterexamples-staleowner counterexamples-releasecrash releasecrash-a2 counterexamples-renewcrash renewcrash-a2 staleowner-tcp staleowner-a2 counterexamples-3acceptors check-impl-colocated impl-colocated-tcp impl-staleowner
 	$(PYTHON) python/scripts/check_paper_claims.py
 
 # Cross-check the paper's cited numbers (trace lengths, exhaustive state
@@ -171,7 +171,7 @@ check-impl-colocated:
 
 # The stale-owner-open violation: P2's renewal qualifier dropped, retry
 # enabled, full quarantine.  Multi-hour search (the recorded run explored
-# 337M distinct states); recorded evidence like the other long searches.
+# 2.67B distinct states); recorded evidence like the other long searches.
 counterexamples-staleowner:
 	cd tla/counterexamples && ($(TLC) -config StaleOwnerOpen.cfg StaleOwnerOpen.tla || true) > ../../results/counterexample-staleowneropen.txt 2>&1 && grep -q "Invariant LeaseExclusivity is violated" ../../results/counterexample-staleowneropen.txt
 

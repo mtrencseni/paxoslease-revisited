@@ -63,6 +63,7 @@ PASSES: dict[str, int] = {
     "nodeowner-base.txt": 220_119,
     "renewcrash-a2.txt": 6_330_050,
     "latetimer-a2.txt": 23_777_320,
+    "staleowner-a2.txt": 2_765_270_158,
     "releasecrash-a2.txt": 224_164_193,
     "retry.txt": 2_179_760_458,
     "renew-retry.txt": 2_411_951_538,
